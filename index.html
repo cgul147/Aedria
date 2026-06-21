@@ -139,13 +139,17 @@
     display: flex; align-items: center; justify-content: center;
     transition: border-color .2s; color: var(--olive-dark);
     flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+    outline: none; -webkit-appearance: none;
   }
   .qty-btn:hover { border-color: var(--olive); }
+  .qty-btn:focus { outline: none; box-shadow: none; border-color: var(--line); }
   .qty-btn svg { width: 13px; height: 13px; }
   .qty-display { font-size: 14px; font-weight: 600; min-width: 18px; text-align: center; }
   .remove-btn {
     background: none; border: none; cursor: pointer;
     color: rgba(53,61,31,0.3); padding: 4px;
+    -webkit-tap-highlight-color: transparent;
     transition: color .2s; flex-shrink: 0; align-self: flex-start;
   }
   .remove-btn:hover { color: var(--earth); }
@@ -475,7 +479,7 @@
   <nav>
     <a href="#ana-sayfa">Ana Sayfa</a>
     <a href="#hikayemiz">Hikayemiz</a>
-    <a href="urunler.html">Ürünler</a>
+    <a href="urunler.html">Ürünlerimiz</a>
     <a href="#iletisim">İletişim</a>
   </nav>
   <button class="cart-btn" id="cartBtn" aria-label="Sepet">
@@ -510,7 +514,7 @@
   </button>
   <a href="#ana-sayfa">Ana Sayfa</a>
   <a href="#hikayemiz">Hikayemiz</a>
-  <a href="urunler.html">Ürünler</a>
+  <a href="urunler.html">Ürünlerimiz</a>
   <a href="#iletisim">İletişim</a>
 </nav>
 
@@ -677,7 +681,7 @@
       <h4>Menü</h4>
       <a href="#ana-sayfa">Ana Sayfa</a>
       <a href="#hikayemiz">Hikayemiz</a>
-      <a href="#urunler">Ürünler</a>
+      <a href="urunler.html">Ürünlerimiz</a>
       <a href="#iletisim">İletişim</a>
     </div>
     <div class="footer-col">

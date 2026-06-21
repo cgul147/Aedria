@@ -140,8 +140,13 @@
     border: 1.5px solid var(--line); background: var(--white);
     cursor: pointer; display: flex; align-items: center; justify-content: center;
     transition: border-color .2s; flex-shrink: 0; color: var(--olive-dark);
+    -webkit-tap-highlight-color: transparent;
+    outline: none; -webkit-appearance: none;
   }
   .d-qty-btn:hover { border-color: var(--olive); }
+  .d-qty-btn:focus { outline: none; box-shadow: none; border-color: var(--line); }
+  .d-qty-btn:active { border-color: var(--olive); }
+  .d-remove-btn { -webkit-tap-highlight-color: transparent; }
   .d-qty-btn svg { width: 12px; height: 12px; }
   .d-qty-display { font-size: 13px; font-weight: 600; min-width: 16px; text-align: center; }
   .d-remove-btn {
@@ -286,17 +291,41 @@
   }
   .filter-reset:hover { color: var(--olive-dark); }
 
-  /* Mobil filtre butonu */
+  /* Mobil filtre butonu — masaüstünde metin+icon, mobilede sadece icon */
   .mobile-filter-btn {
     display: none;
-    align-items: center; gap: 8px;
+    align-items: center; justify-content: center;
+    width: 38px; height: 38px;
     background: var(--cream); border: 1px solid var(--line);
-    border-radius: var(--r-pill); padding: 10px 20px;
-    font-size: 14px; font-family: 'Inter', sans-serif;
+    border-radius: var(--r-pill);
     color: var(--olive-dark); cursor: pointer;
     transition: border-color .2s;
+    -webkit-tap-highlight-color: transparent;
+    flex-shrink: 0;
   }
   .mobile-filter-btn:hover { border-color: var(--olive); }
+  .mobile-filter-btn svg { width: 18px; height: 18px; }
+  .mobile-filter-btn .btn-text { display: none; }
+
+  /* Mobil sort wrapper — masaüstünde select, mobilede icon */
+  .sort-icon-btn {
+    display: none;
+    align-items: center; justify-content: center;
+    width: 38px; height: 38px;
+    background: var(--cream); border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    color: var(--olive-dark); cursor: pointer;
+    transition: border-color .2s;
+    -webkit-tap-highlight-color: transparent;
+    flex-shrink: 0; position: relative;
+  }
+  .sort-icon-btn:hover { border-color: var(--olive); }
+  .sort-icon-btn svg { width: 18px; height: 18px; }
+  /* Gizli native select — icon üstüne bindirilir, dokunulunca açılır */
+  .sort-icon-btn select {
+    position: absolute; inset: 0; opacity: 0;
+    width: 100%; height: 100%; cursor: pointer;
+  }
 
   /* Mobil filtre drawer */
   .filter-drawer {
@@ -432,10 +461,16 @@
     cursor: pointer; display: flex; align-items: center; justify-content: center;
     transition: border-color .2s, background .2s; flex-shrink: 0;
     color: var(--olive-dark);
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+    -webkit-appearance: none;
   }
   .card-qty-btn:hover { border-color: var(--olive); background: var(--cream); }
+  .card-qty-btn:focus { outline: none; box-shadow: none; border-color: var(--line); }
+  .card-qty-btn:active { border-color: var(--olive); background: var(--cream-soft); }
   .card-qty-btn svg { width: 13px; height: 13px; }
   .card-qty-display { font-size: 14px; font-weight: 600; min-width: 18px; text-align: center; }
+  .card-add-btn { -webkit-tap-highlight-color: transparent; }
 
   /* ---- Boş durum ---- */
   .empty-state {
@@ -505,11 +540,12 @@
     .page-wrap { grid-template-columns: 1fr; padding: 28px 5% 60px; }
     .sidebar { display: none; padding-right: 0; }
     .mobile-filter-btn { display: flex; }
-    .listing-header { margin-bottom: 20px; flex-wrap: nowrap; gap: 8px; }
-    .listing-header h1 { font-size: 22px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sort-icon-btn { display: flex; }
+    .sort-select { display: none; }
+    .listing-header { margin-bottom: 20px; flex-wrap: nowrap; gap: 8px; align-items: center; }
+    .listing-header h1 { font-size: 22px; flex: 1; min-width: 0; }
     .listing-header-right { gap: 8px; flex-shrink: 0; }
     .result-count { display: none; }
-    .sort-select { min-width: 0; width: 120px; font-size: 12px; padding: 8px 28px 8px 10px; }
 
     .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
   }
@@ -540,7 +576,7 @@
   <nav>
     <a href="index.html">Ana Sayfa</a>
     <a href="index.html#hikayemiz">Hikayemiz</a>
-    <a href="urunler.html" class="active">Ürünler</a>
+    <a href="urunler.html" class="active">Ürünlerimiz</a>
     <a href="index.html#iletisim">İletişim</a>
   </nav>
   <button class="cart-btn" id="cartBtn" aria-label="Sepet">
@@ -576,7 +612,7 @@
   </button>
   <a href="index.html">Ana Sayfa</a>
   <a href="index.html#hikayemiz">Hikayemiz</a>
-  <a href="urunler.html" class="active">Ürünler</a>
+  <a href="urunler.html" class="active">Ürünlerimiz</a>
   <a href="index.html#iletisim">İletişim</a>
 </nav>
 
@@ -677,11 +713,22 @@
     <div class="listing-header">
       <h1 id="listingTitle">Tüm Ürünler</h1>
       <div class="listing-header-right">
-        <button class="mobile-filter-btn" id="mobileFilterBtn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
-          Filtrele
+        <!-- Mobil: sadece filtre ikonu -->
+        <button class="mobile-filter-btn" id="mobileFilterBtn" aria-label="Filtrele">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
         </button>
+        <!-- Mobil: sıralama ikonu (native select gizlenmiş) -->
+        <div class="sort-icon-btn" aria-label="Sırala">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M7 12h10M11 18h2"/></svg>
+          <select id="sortSelectMobile" aria-label="Sıralama">
+            <option value="default">Öne Çıkanlar</option>
+            <option value="price-asc">Fiyat: Düşükten Yükseğe</option>
+            <option value="price-desc">Fiyat: Yüksekten Düşüğe</option>
+            <option value="newest">Yeniler Önce</option>
+          </select>
+        </div>
         <span class="result-count" id="resultCount"></span>
+        <!-- Masaüstü: normal select -->
         <select class="sort-select" id="sortSelect">
           <option value="default">Öne Çıkanlar</option>
           <option value="price-asc">Fiyat: Düşükten Yükseğe</option>
@@ -718,7 +765,7 @@
       <h4>Menü</h4>
       <a href="index.html">Ana Sayfa</a>
       <a href="index.html#hikayemiz">Hikayemiz</a>
-      <a href="urunler.html">Ürünler</a>
+      <a href="urunler.html">Ürünlerimiz</a>
       <a href="index.html#iletisim">İletişim</a>
     </div>
     <div class="footer-col">
@@ -1157,9 +1204,17 @@ priceMaxInput.addEventListener('input', () => {
   updateSliderUI(); updatePriceLabels(); applyAndRender();
 });
 
-/* Sıralama */
+/* Sıralama — masaüstü */
 document.getElementById('sortSelect').addEventListener('change', e => {
   activeSort = e.target.value;
+  document.getElementById('sortSelectMobile').value = e.target.value;
+  applyAndRender();
+});
+
+/* Sıralama — mobil icon üstündeki gizli select */
+document.getElementById('sortSelectMobile').addEventListener('change', e => {
+  activeSort = e.target.value;
+  document.getElementById('sortSelect').value = e.target.value;
   applyAndRender();
 });
 
@@ -1168,6 +1223,7 @@ function resetFilters() {
   activeFilters = { tur: [], boyut: [], priceMin: 0, priceMax: 7000 };
   activeSort = 'default';
   document.getElementById('sortSelect').value = 'default';
+  document.getElementById('sortSelectMobile').value = 'default';
   syncCheckboxes();
   updateURL();
   applyAndRender();
