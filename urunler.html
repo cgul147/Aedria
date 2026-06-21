@@ -95,6 +95,7 @@
     transition: transform .35s ease;
     display: flex; flex-direction: column;
     box-shadow: -8px 0 40px rgba(53,61,31,0.14);
+    overflow-x: hidden;
   }
   .cart-drawer.open { transform: translateX(0); }
   .cart-drawer-header {
@@ -104,32 +105,46 @@
   .cart-drawer-header h2 { font-size: 22px; }
   .cart-close-btn { background: none; border: none; cursor: pointer; color: var(--olive-dark); padding: 4px; transition: color .2s; }
   .cart-close-btn:hover { color: var(--earth); }
-  .cart-drawer-body { flex: 1; overflow-y: auto; padding: 24px 28px; }
+  .cart-drawer-body { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 20px 24px; }
   .cart-empty { text-align: center; padding: 60px 0; }
   .cart-empty svg { width: 64px; height: 64px; color: rgba(53,61,31,0.15); margin: 0 auto 20px; display: block; }
   .cart-empty h3 { font-size: 22px; margin-bottom: 10px; }
   .cart-empty p { font-size: 15px; color: rgba(53,61,31,0.6); margin-bottom: 28px; }
-  .cart-item-list { display: flex; flex-direction: column; gap: 14px; }
+
+  /* ---- Sepet item yeni tasarım ---- */
+  .cart-item-list { display: flex; flex-direction: column; gap: 12px; }
   .cart-item {
-    display: flex; align-items: center; gap: 14px;
-    padding: 16px; background: var(--cream); border-radius: var(--r-md); border: 1px solid var(--line);
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px; background: var(--cream); border-radius: var(--r-md); border: 1px solid var(--line);
   }
-  .cart-item-info { flex: 1; }
-  .cart-item-info h4 { font-size: 15px; margin-bottom: 3px; }
-  .cart-item-info span { font-size: 13px; color: rgba(53,61,31,0.6); }
-  .cart-item-controls { display: flex; align-items: center; gap: 10px; }
+  .cart-item-img {
+    width: 58px; height: 58px; border-radius: 10px;
+    overflow: hidden; flex-shrink: 0;
+    background: var(--white); border: 1px solid var(--line);
+  }
+  .cart-item-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .cart-item-body { flex: 1; min-width: 0; }
+  .cart-item-name { font-family: 'Fraunces', serif; font-size: 13px; font-weight: 500; line-height: 1.35; margin-bottom: 2px; }
+  .cart-item-size { font-size: 11px; color: rgba(53,61,31,0.5); margin-bottom: 6px; }
+  .cart-item-price-row { font-size: 12px; color: rgba(53,61,31,0.6); }
+  .cart-item-controls { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
   .d-qty-btn {
-    width: 30px; height: 30px; border-radius: var(--r-pill);
+    width: 26px; height: 26px; border-radius: var(--r-pill);
     border: 1.5px solid var(--line); background: var(--white);
-    cursor: pointer; font-size: 16px; line-height: 1;
-    display: flex; align-items: center; justify-content: center;
-    transition: border-color .2s; flex-shrink: 0;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: border-color .2s; flex-shrink: 0; color: var(--olive-dark);
   }
   .d-qty-btn:hover { border-color: var(--olive); }
-  .d-qty-display { font-size: 15px; font-weight: 500; min-width: 20px; text-align: center; }
-  .d-remove-btn { background: none; border: none; cursor: pointer; color: rgba(53,61,31,0.35); padding: 2px; transition: color .2s; flex-shrink: 0; }
+  .d-qty-btn svg { width: 12px; height: 12px; }
+  .d-qty-display { font-size: 13px; font-weight: 600; min-width: 16px; text-align: center; }
+  .d-remove-btn {
+    background: none; border: none; cursor: pointer;
+    color: rgba(53,61,31,0.3); padding: 4px; transition: color .2s;
+    flex-shrink: 0; align-self: flex-start;
+  }
   .d-remove-btn:hover { color: var(--earth); }
-  .cart-drawer-footer { padding: 20px 28px 28px; border-top: 1px solid var(--line); flex-shrink: 0; }
+  .d-remove-btn svg { width: 14px; height: 14px; display: block; }
+  .cart-drawer-footer { padding: 16px 24px 24px; border-top: 1px solid var(--line); flex-shrink: 0; }
   .cart-total-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
   .cart-total-label { font-size: 15px; color: rgba(53,61,31,0.7); }
   .cart-total-amount { font-family: 'Fraunces', serif; font-size: 26px; }
@@ -605,22 +620,22 @@
       <div class="sidebar-title">Boyut</div>
       <div class="filter-group" id="filterBoyut">
         <label class="filter-item">
-          <input type="checkbox" value="500ml" name="boyut">
+          <input type="checkbox" value="500 ml" name="boyut">
           <span class="filter-check"></span>
           <span class="filter-label">500 ml</span>
         </label>
         <label class="filter-item">
-          <input type="checkbox" value="750ml" name="boyut">
+          <input type="checkbox" value="750 ml" name="boyut">
           <span class="filter-check"></span>
           <span class="filter-label">750 ml</span>
         </label>
         <label class="filter-item">
-          <input type="checkbox" value="2000ml" name="boyut">
+          <input type="checkbox" value="2000 ml" name="boyut">
           <span class="filter-check"></span>
           <span class="filter-label">2000 ml</span>
         </label>
         <label class="filter-item">
-          <input type="checkbox" value="5000ml" name="boyut">
+          <input type="checkbox" value="5000 ml" name="boyut">
           <span class="filter-check"></span>
           <span class="filter-label">5000 ml</span>
         </label>
@@ -735,7 +750,7 @@ const PRODUCTS = [
     name: 'Erken Hasat Natürel Sızma Zeytinyağı',
     type: 'erken-hasat',
     typeLabel: 'Erken Hasat',
-    size: '500ml',
+    size: '500 ml',
     price: 890,
     discountPrice: null,
     badges: ['new'],
@@ -750,7 +765,7 @@ const PRODUCTS = [
     name: 'Erken Hasat Natürel Sızma Zeytinyağı',
     type: 'erken-hasat',
     typeLabel: 'Erken Hasat',
-    size: '750ml',
+    size: '750 ml',
     price: 1170,
     discountPrice: null,
     badges: [],
@@ -765,7 +780,7 @@ const PRODUCTS = [
     name: 'Erken Hasat Natürel Sızma Zeytinyağı',
     type: 'erken-hasat',
     typeLabel: 'Erken Hasat',
-    size: '2000ml',
+    size: '2000 ml',
     price: 2685,
     discountPrice: null,
     badges: ['hot'],
@@ -780,7 +795,7 @@ const PRODUCTS = [
     name: 'Erken Hasat Natürel Sızma Zeytinyağı',
     type: 'erken-hasat',
     typeLabel: 'Erken Hasat',
-    size: '5000ml',
+    size: '5000 ml',
     price: 5190,
     discountPrice: null,
     badges: [],
@@ -795,7 +810,7 @@ const PRODUCTS = [
     name: 'Günlük Natürel Sızma Zeytinyağı',
     type: 'daily',
     typeLabel: 'Günlük',
-    size: '500ml',
+    size: '500 ml',
     price: 830,
     discountPrice: null,
     badges: ['hot'],
@@ -810,7 +825,7 @@ const PRODUCTS = [
     name: 'Günlük Natürel Sızma Zeytinyağı',
     type: 'daily',
     typeLabel: 'Günlük',
-    size: '750ml',
+    size: '750 ml',
     price: 1080,
     discountPrice: null,
     badges: [],
@@ -825,7 +840,7 @@ const PRODUCTS = [
     name: 'Günlük Natürel Sızma Zeytinyağı',
     type: 'daily',
     typeLabel: 'Günlük',
-    size: '2000ml',
+    size: '2000 ml',
     price: 2590,
     discountPrice: null,
     badges: [],
@@ -840,7 +855,7 @@ const PRODUCTS = [
     name: 'Günlük Natürel Sızma Zeytinyağı',
     type: 'daily',
     typeLabel: 'Günlük',
-    size: '5000ml',
+    size: '5000 ml',
     price: 5085,
     discountPrice: null,
     badges: [],
@@ -907,7 +922,16 @@ function getCartQty(productId) {
 function addToCart(product) {
   const existing = cart.find(i => i.id === product.id);
   if (existing) { existing.qty++; }
-  else { cart.push({ id: product.id, name: `${product.name} ${product.size}`, price: product.price, qty: 1 }); }
+  else {
+    cart.push({
+      id: product.id,
+      name: product.name,
+      size: product.size,
+      price: product.price,
+      image: product.image,
+      qty: 1
+    });
+  }
   saveCart(); updateBadge(); updateCardControls(product.id);
 }
 
@@ -978,21 +1002,32 @@ function renderDrawer() {
   footer.removeAttribute('hidden');
   const total = cart.reduce((s, i) => s + (i.price || 0) * i.qty, 0);
   document.getElementById('cartTotalAmount').textContent = '₺' + total.toLocaleString('tr-TR');
-  body.innerHTML = `<div class="cart-item-list">${cart.map((item, idx) => `
+
+  const trashIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`;
+  const minusIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>`;
+  const plusIcon  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`;
+
+  body.innerHTML = `<div class="cart-item-list">${cart.map((item, idx) => {
+    const decIcon = item.qty === 1 ? trashIcon : minusIcon;
+    const sizeLabel = item.size ? `<div class="cart-item-size">${item.size}</div>` : '';
+    return `
     <div class="cart-item">
-      <div class="cart-item-info">
-        <h4>${item.name}</h4>
-        <span>${item.price ? '₺' + item.price.toLocaleString('tr-TR') + ' / adet' : 'Fiyat belli olunca güncellenir'}</span>
+      <div class="cart-item-img">
+        <img src="${item.image || 'aedria-erken-hasat.png'}" alt="${item.name}">
       </div>
-      <div class="cart-item-controls">
-        <button class="d-qty-btn" data-idx="${idx}" data-action="dec">−</button>
-        <span class="d-qty-display">${item.qty}</span>
-        <button class="d-qty-btn" data-idx="${idx}" data-action="inc">+</button>
+      <div class="cart-item-body">
+        <div class="cart-item-name">${item.name}</div>
+        ${sizeLabel}
+        <div class="cart-item-price-row">${item.price ? '₺' + item.price.toLocaleString('tr-TR') + ' / adet' : 'Fiyat yakında'}</div>
+        <div class="cart-item-controls">
+          <button class="d-qty-btn" data-idx="${idx}" data-action="dec">${decIcon}</button>
+          <span class="d-qty-display">${item.qty}</span>
+          <button class="d-qty-btn" data-idx="${idx}" data-action="inc">${plusIcon}</button>
+        </div>
       </div>
-      <button class="d-remove-btn" data-idx="${idx}" aria-label="${item.name} kaldır">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>`).join('')}</div>`;
+      <button class="d-remove-btn" data-idx="${idx}" aria-label="${item.name} kaldır">${trashIcon}</button>
+    </div>`;
+  }).join('')}</div>`;
 
   body.querySelectorAll('.d-qty-btn').forEach(btn => {
     btn.addEventListener('click', () => {
