@@ -123,11 +123,18 @@
     background: var(--white); border: 1px solid var(--line);
   }
   .cart-item-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* Orta: isim + boyut + fiyat */
   .cart-item-body { flex: 1; min-width: 0; }
   .cart-item-name { font-family: 'Fraunces', serif; font-size: 13px; font-weight: 500; line-height: 1.35; margin-bottom: 2px; }
-  .cart-item-size { font-size: 11px; color: rgba(53,61,31,0.5); margin-bottom: 6px; }
+  .cart-item-size { font-size: 11px; color: rgba(53,61,31,0.5); margin-bottom: 4px; }
   .cart-item-price-row { font-size: 12px; color: rgba(53,61,31,0.6); }
-  .cart-item-controls { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+  /* Sağ kolon: üstte çöp kutusu, altında adet kontrolü */
+  .cart-item-right {
+    display: flex; flex-direction: column; align-items: flex-end;
+    justify-content: space-between; gap: 8px; flex-shrink: 0;
+    align-self: stretch;
+  }
+  .cart-item-controls { display: flex; align-items: center; gap: 6px; }
   .d-qty-btn {
     width: 26px; height: 26px; border-radius: var(--r-pill);
     border: 1.5px solid var(--line); background: var(--white);
@@ -139,8 +146,7 @@
   .d-qty-display { font-size: 13px; font-weight: 600; min-width: 16px; text-align: center; }
   .d-remove-btn {
     background: none; border: none; cursor: pointer;
-    color: rgba(53,61,31,0.3); padding: 4px; transition: color .2s;
-    flex-shrink: 0; align-self: flex-start;
+    color: rgba(53,61,31,0.3); padding: 2px; transition: color .2s; flex-shrink: 0;
   }
   .d-remove-btn:hover { color: var(--earth); }
   .d-remove-btn svg { width: 14px; height: 14px; display: block; }
@@ -499,7 +505,11 @@
     .page-wrap { grid-template-columns: 1fr; padding: 28px 5% 60px; }
     .sidebar { display: none; padding-right: 0; }
     .mobile-filter-btn { display: flex; }
-    .listing-header { margin-bottom: 20px; }
+    .listing-header { margin-bottom: 20px; flex-wrap: nowrap; gap: 8px; }
+    .listing-header h1 { font-size: 22px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .listing-header-right { gap: 8px; flex-shrink: 0; }
+    .result-count { display: none; }
+    .sort-select { min-width: 0; width: 120px; font-size: 12px; padding: 8px 28px 8px 10px; }
 
     .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
   }
@@ -1019,13 +1029,15 @@ function renderDrawer() {
         <div class="cart-item-name">${item.name}</div>
         ${sizeLabel}
         <div class="cart-item-price-row">${item.price ? '₺' + item.price.toLocaleString('tr-TR') + ' / adet' : 'Fiyat yakında'}</div>
+      </div>
+      <div class="cart-item-right">
+        <button class="d-remove-btn" data-idx="${idx}" aria-label="${item.name} kaldır">${trashIcon}</button>
         <div class="cart-item-controls">
           <button class="d-qty-btn" data-idx="${idx}" data-action="dec">${decIcon}</button>
           <span class="d-qty-display">${item.qty}</span>
           <button class="d-qty-btn" data-idx="${idx}" data-action="inc">${plusIcon}</button>
         </div>
       </div>
-      <button class="d-remove-btn" data-idx="${idx}" aria-label="${item.name} kaldır">${trashIcon}</button>
     </div>`;
   }).join('')}</div>`;
 
@@ -1049,8 +1061,19 @@ function renderDrawer() {
 /* Drawer aç/kapat */
 const cartOverlay = document.getElementById('cartOverlay');
 const cartDrawer  = document.getElementById('cartDrawer');
-function openCart()  { renderDrawer(); cartDrawer.classList.add('open'); cartOverlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
-function closeCart() { cartDrawer.classList.remove('open'); cartOverlay.classList.remove('open'); document.body.style.overflow = ''; }
+function openCart()  {
+  renderDrawer();
+  cartDrawer.classList.add('open');
+  cartOverlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.documentElement.style.overflow = 'hidden';
+}
+function closeCart() {
+  cartDrawer.classList.remove('open');
+  cartOverlay.classList.remove('open');
+  document.body.style.overflow = '';
+  document.documentElement.style.overflow = '';
+}
 document.getElementById('cartBtn').addEventListener('click', openCart);
 document.getElementById('cartClose').addEventListener('click', closeCart);
 cartOverlay.addEventListener('click', closeCart);

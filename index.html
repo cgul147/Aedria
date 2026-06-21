@@ -785,8 +785,19 @@
   const cartOverlay = document.getElementById('cartOverlay');
   const cartDrawer  = document.getElementById('cartDrawer');
 
-  function openCart()  { renderCart(); cartDrawer.classList.add('open'); cartOverlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
-  function closeCart() { cartDrawer.classList.remove('open'); cartOverlay.classList.remove('open'); document.body.style.overflow = ''; }
+  function openCart()  {
+    renderCart();
+    cartDrawer.classList.add('open');
+    cartOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+  }
+  function closeCart() {
+    cartDrawer.classList.remove('open');
+    cartOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+  }
 
   document.getElementById('cartBtn').addEventListener('click', openCart);
   document.getElementById('cartClose').addEventListener('click', closeCart);
