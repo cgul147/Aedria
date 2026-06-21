@@ -289,9 +289,9 @@
     padding: 0; text-decoration: underline; margin-top: 4px;
     transition: color .2s;
   }
-  .filter-reset:hover { color: var(--olive-dark); }
+  .filter-drawer .filter-reset { display: none; }
 
-  /* Mobil filtre butonu — masaüstünde metin+icon, mobilede sadece icon */
+  /* Mobil filtre butonu — huni ikonu */
   .mobile-filter-btn {
     display: none;
     align-items: center; justify-content: center;
@@ -304,10 +304,9 @@
     flex-shrink: 0;
   }
   .mobile-filter-btn:hover { border-color: var(--olive); }
-  .mobile-filter-btn svg { width: 18px; height: 18px; }
-  .mobile-filter-btn .btn-text { display: none; }
+  .mobile-filter-btn svg { width: 17px; height: 17px; }
 
-  /* Mobil sort wrapper — masaüstünde select, mobilede icon */
+  /* Mobil sort wrapper — yukarı/aşağı ok ikonu */
   .sort-icon-btn {
     display: none;
     align-items: center; justify-content: center;
@@ -320,7 +319,7 @@
     flex-shrink: 0; position: relative;
   }
   .sort-icon-btn:hover { border-color: var(--olive); }
-  .sort-icon-btn svg { width: 18px; height: 18px; }
+  .sort-icon-btn svg { width: 17px; height: 17px; }
   /* Gizli native select — icon üstüne bindirilir, dokunulunca açılır */
   .sort-icon-btn select {
     position: absolute; inset: 0; opacity: 0;
@@ -423,25 +422,25 @@
 
   .card-footer {
     display: flex; align-items: center; justify-content: space-between;
-    gap: 8px; margin-top: auto; flex-wrap: wrap;
+    gap: 6px; margin-top: auto; flex-wrap: nowrap;
   }
 
   /* Fiyat */
-  .card-price-wrap { display: flex; flex-direction: column; }
+  .card-price-wrap { display: flex; flex-direction: column; min-width: 0; }
   .card-price-old { font-size: 13px; color: rgba(53,61,31,0.4); text-decoration: line-through; line-height: 1.2; }
   .card-price {
-    font-family: 'Fraunces', serif; font-size: 20px; font-weight: 500;
-    display: flex; align-items: baseline; gap: 3px;
+    font-family: 'Fraunces', serif; font-size: 18px; font-weight: 500;
+    display: flex; align-items: baseline; gap: 2px; white-space: nowrap;
   }
-  .card-price .try-icon { font-size: 15px; }
-  .card-price-soon { font-size: 14px; color: rgba(53,61,31,0.5); font-style: italic; }
+  .card-price .try-icon { font-size: 14px; }
+  .card-price-soon { font-size: 13px; color: rgba(53,61,31,0.5); font-style: italic; white-space: nowrap; }
 
-  /* Sepete ekle butonu — normal hali */
+  /* Sepete ekle butonu — + ikonsuz, kompakt */
   .card-add-btn {
-    display: flex; align-items: center; justify-content: center; gap: 6px;
+    display: flex; align-items: center; justify-content: center;
     background: var(--olive); color: var(--cream);
     border: none; border-radius: var(--r-pill);
-    padding: 9px 14px; font-size: 12px; font-weight: 500;
+    padding: 8px 12px; font-size: 11px; font-weight: 500;
     font-family: 'Inter', sans-serif; cursor: pointer;
     transition: background .25s; white-space: nowrap; flex-shrink: 0;
   }
@@ -552,9 +551,15 @@
 
   @media (max-width: 560px) {
     .product-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
-    .card-info { padding: 14px; }
-    .card-name { font-size: 15px; }
-    .card-add-btn { padding: 9px 12px; font-size: 12px; }
+    .card-info { padding: 12px; }
+    .card-name { font-size: 13px; }
+    .card-size { font-size: 11px; margin-bottom: 10px; }
+    .card-price { font-size: 15px; }
+    .card-price .try-icon { font-size: 12px; }
+    .card-footer { gap: 4px; }
+    .card-add-btn { padding: 7px 9px; font-size: 11px; }
+    .card-qty-btn { width: 24px; height: 24px; }
+    .card-qty-display { font-size: 12px; min-width: 14px; }
     .footer-grid { grid-template-columns: 1fr; gap: 28px; }
     .footer-bottom { flex-direction: column; }
     .newsletter-form { flex-direction: column; width: 100%; }
@@ -713,13 +718,13 @@
     <div class="listing-header">
       <h1 id="listingTitle">Tüm Ürünler</h1>
       <div class="listing-header-right">
-        <!-- Mobil: sadece filtre ikonu -->
+        <!-- Mobil: filtre ikonu (huni) -->
         <button class="mobile-filter-btn" id="mobileFilterBtn" aria-label="Filtrele">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
         </button>
-        <!-- Mobil: sıralama ikonu (native select gizlenmiş) -->
+        <!-- Mobil: sıralama ikonu (yukarı aşağı ok) -->
         <div class="sort-icon-btn" aria-label="Sırala">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M7 12h10M11 18h2"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6l4-4 4 4"/><path d="M16 18l-4 4-4-4"/><line x1="12" y1="2" x2="12" y2="22"/></svg>
           <select id="sortSelectMobile" aria-label="Sıralama">
             <option value="default">Öne Çıkanlar</option>
             <option value="price-asc">Fiyat: Düşükten Yükseğe</option>
@@ -1326,7 +1331,6 @@ function cardHTML(p) {
           <div class="card-price-wrap">${priceHTML}</div>
           ${canBuy ? `
           <button class="card-add-btn${addHidden}" data-id="${p.id}" aria-label="${p.name} ${p.size} sepete ekle">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Sepete Ekle
           </button>
           <div class="card-cart-controls${ctrlVisible}" data-id="${p.id}">
