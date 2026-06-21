@@ -368,10 +368,13 @@
   /* Kart bilgi alanı */
   .card-info { padding: 20px; display: flex; flex-direction: column; flex: 1; }
   .card-type { font-size: 11px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: var(--earth); margin-bottom: 4px; }
-  .card-name { font-size: 18px; margin-bottom: 2px; }
+  .card-name { font-size: 15px; margin-bottom: 2px; line-height: 1.35; }
   .card-size { font-size: 13px; color: rgba(53,61,31,0.55); margin-bottom: 14px; }
 
-  .card-footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; }
+  .card-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px; margin-top: auto; flex-wrap: wrap;
+  }
 
   /* Fiyat */
   .card-price-wrap { display: flex; flex-direction: column; }
@@ -388,7 +391,7 @@
     display: flex; align-items: center; justify-content: center; gap: 6px;
     background: var(--olive); color: var(--cream);
     border: none; border-radius: var(--r-pill);
-    padding: 10px 18px; font-size: 13px; font-weight: 500;
+    padding: 9px 14px; font-size: 12px; font-weight: 500;
     font-family: 'Inter', sans-serif; cursor: pointer;
     transition: background .25s; white-space: nowrap; flex-shrink: 0;
   }
@@ -403,15 +406,15 @@
   .card-add-btn.hidden { display: none; }
 
   .card-qty-btn {
-    width: 32px; height: 32px; border-radius: var(--r-pill);
+    width: 28px; height: 28px; border-radius: var(--r-pill);
     border: 1.5px solid var(--line); background: var(--white);
     cursor: pointer; display: flex; align-items: center; justify-content: center;
     transition: border-color .2s, background .2s; flex-shrink: 0;
     color: var(--olive-dark);
   }
   .card-qty-btn:hover { border-color: var(--olive); background: var(--cream); }
-  .card-qty-btn svg { width: 14px; height: 14px; }
-  .card-qty-display { font-size: 15px; font-weight: 600; min-width: 20px; text-align: center; }
+  .card-qty-btn svg { width: 13px; height: 13px; }
+  .card-qty-display { font-size: 14px; font-weight: 600; min-width: 18px; text-align: center; }
 
   /* ---- Boş durum ---- */
   .empty-state {
@@ -510,6 +513,7 @@
   </button>
   <a href="index.html" class="logo" aria-label="AEDRIA Ana Sayfa"><img src="aedria-logo.png" alt="AEDRIA"></a>
   <nav>
+    <a href="index.html">Ana Sayfa</a>
     <a href="index.html#hikayemiz">Hikayemiz</a>
     <a href="urunler.html" class="active">Ürünler</a>
     <a href="index.html#iletisim">İletişim</a>
@@ -585,7 +589,7 @@
         <label class="filter-item">
           <input type="checkbox" value="daily" name="tur">
           <span class="filter-check"></span>
-          <span class="filter-label">Daily</span>
+          <span class="filter-label">Günlük</span>
           <span class="filter-count">4</span>
         </label>
         <label class="filter-item">
@@ -728,7 +732,7 @@
 const PRODUCTS = [
   {
     id: 'erken-hasat-500',
-    name: 'Erken Hasat',
+    name: 'Erken Hasat Natürel Sızma Zeytinyağı',
     type: 'erken-hasat',
     typeLabel: 'Erken Hasat',
     size: '500ml',
@@ -743,7 +747,7 @@ const PRODUCTS = [
   },
   {
     id: 'erken-hasat-750',
-    name: 'Erken Hasat',
+    name: 'Erken Hasat Natürel Sızma Zeytinyağı',
     type: 'erken-hasat',
     typeLabel: 'Erken Hasat',
     size: '750ml',
@@ -758,7 +762,7 @@ const PRODUCTS = [
   },
   {
     id: 'erken-hasat-2000',
-    name: 'Erken Hasat',
+    name: 'Erken Hasat Natürel Sızma Zeytinyağı',
     type: 'erken-hasat',
     typeLabel: 'Erken Hasat',
     size: '2000ml',
@@ -773,7 +777,7 @@ const PRODUCTS = [
   },
   {
     id: 'erken-hasat-5000',
-    name: 'Erken Hasat',
+    name: 'Erken Hasat Natürel Sızma Zeytinyağı',
     type: 'erken-hasat',
     typeLabel: 'Erken Hasat',
     size: '5000ml',
@@ -788,9 +792,9 @@ const PRODUCTS = [
   },
   {
     id: 'daily-500',
-    name: 'Daily',
+    name: 'Günlük Natürel Sızma Zeytinyağı',
     type: 'daily',
-    typeLabel: 'Daily',
+    typeLabel: 'Günlük',
     size: '500ml',
     price: 830,
     discountPrice: null,
@@ -803,9 +807,9 @@ const PRODUCTS = [
   },
   {
     id: 'daily-750',
-    name: 'Daily',
+    name: 'Günlük Natürel Sızma Zeytinyağı',
     type: 'daily',
-    typeLabel: 'Daily',
+    typeLabel: 'Günlük',
     size: '750ml',
     price: 1080,
     discountPrice: null,
@@ -818,9 +822,9 @@ const PRODUCTS = [
   },
   {
     id: 'daily-2000',
-    name: 'Daily',
+    name: 'Günlük Natürel Sızma Zeytinyağı',
     type: 'daily',
-    typeLabel: 'Daily',
+    typeLabel: 'Günlük',
     size: '2000ml',
     price: 2590,
     discountPrice: null,
@@ -833,9 +837,9 @@ const PRODUCTS = [
   },
   {
     id: 'daily-5000',
-    name: 'Daily',
+    name: 'Günlük Natürel Sızma Zeytinyağı',
     type: 'daily',
-    typeLabel: 'Daily',
+    typeLabel: 'Günlük',
     size: '5000ml',
     price: 5085,
     discountPrice: null,
@@ -848,10 +852,10 @@ const PRODUCTS = [
   },
   {
     id: 'ozel-set-ikili',
-    name: 'İkili Set',
+    name: 'İkili Özel Set',
     type: 'ozel-set',
     typeLabel: 'Özel Set',
-    size: 'Erken Hasat + Daily',
+    size: 'Erken Hasat + Günlük',
     price: null,
     discountPrice: null,
     badges: ['new'],
@@ -863,7 +867,7 @@ const PRODUCTS = [
   },
   {
     id: 'ozel-set-premium',
-    name: 'Premium Set',
+    name: 'Premium Özel Set',
     type: 'ozel-set',
     typeLabel: 'Özel Set',
     size: 'Erken Hasat x2',
@@ -881,7 +885,7 @@ const PRODUCTS = [
 /* Tür başlıkları */
 const TYPE_TITLES = {
   'erken-hasat': 'Erken Hasat Ürünleri',
-  'daily': 'Günlük Olgun Hasat Ürünleri',
+  'daily': 'Günlük Ürünler',
   'ozel-set': 'Özel Set Ürünleri'
 };
 
