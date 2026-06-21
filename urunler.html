@@ -302,9 +302,21 @@
     transition: border-color .2s;
     -webkit-tap-highlight-color: transparent;
     flex-shrink: 0;
+    position: relative;
   }
   .mobile-filter-btn:hover { border-color: var(--olive); }
   .mobile-filter-btn svg { width: 17px; height: 17px; }
+  .filter-badge {
+    position: absolute; top: -5px; right: -5px;
+    background: var(--earth); color: #fff;
+    font-size: 10px; font-weight: 700; line-height: 1;
+    min-width: 17px; height: 17px;
+    border-radius: var(--r-pill);
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 4px;
+    pointer-events: none;
+  }
+  .filter-badge[hidden] { display: none; }
 
   /* Mobil sort wrapper — yukarı/aşağı ok ikonu */
   .sort-icon-btn {
@@ -381,7 +393,10 @@
     display: flex; flex-direction: column;
     cursor: pointer;
   }
-  .product-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(53,61,31,0.1); }
+  @media (hover: hover) {
+    .product-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(53,61,31,0.1); }
+    .product-card:hover .card-img-wrap img { transform: scale(1.04); }
+  }
   .product-card.out-of-stock { opacity: 0.52; pointer-events: none; }
   .product-card.out-of-stock .card-link { pointer-events: none; }
 
@@ -391,7 +406,6 @@
     aspect-ratio: 1/1; overflow: hidden;
   }
   .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
-  .product-card:hover .card-img-wrap img { transform: scale(1.04); }
 
   /* Etiketler */
   .card-badges {
@@ -464,9 +478,12 @@
     outline: none;
     -webkit-appearance: none;
   }
-  .card-qty-btn:hover { border-color: var(--olive); background: var(--cream); }
-  .card-qty-btn:focus { outline: none; box-shadow: none; border-color: var(--line); }
+  @media (hover: hover) {
+    .card-qty-btn:hover { border-color: var(--olive); background: var(--cream); }
+  }
+  .card-qty-btn:focus { outline: none; box-shadow: none; }
   .card-qty-btn:active { border-color: var(--olive); background: var(--cream-soft); }
+  .card-qty-btn:focus:not(:active) { border-color: var(--line); background: var(--white); }
   .card-qty-btn svg { width: 13px; height: 13px; }
   .card-qty-display { font-size: 14px; font-weight: 600; min-width: 18px; text-align: center; }
   .card-add-btn { -webkit-tap-highlight-color: transparent; }
@@ -554,12 +571,13 @@
     .card-info { padding: 12px; }
     .card-name { font-size: 13px; }
     .card-size { font-size: 11px; margin-bottom: 10px; }
-    .card-price { font-size: 15px; }
-    .card-price .try-icon { font-size: 12px; }
-    .card-footer { gap: 4px; }
-    .card-add-btn { padding: 7px 9px; font-size: 11px; }
-    .card-qty-btn { width: 24px; height: 24px; }
-    .card-qty-display { font-size: 12px; min-width: 14px; }
+    .card-price { font-size: 16px; }
+    .card-price .try-icon { font-size: 13px; }
+    .card-footer { gap: 6px; }
+    .card-add-btn { padding: 8px 11px; font-size: 12px; }
+    .card-qty-btn { width: 26px; height: 26px; }
+    .card-qty-btn svg { width: 12px; height: 12px; }
+    .card-qty-display { font-size: 13px; min-width: 16px; }
     .footer-grid { grid-template-columns: 1fr; gap: 28px; }
     .footer-bottom { flex-direction: column; }
     .newsletter-form { flex-direction: column; width: 100%; }
@@ -721,6 +739,7 @@
         <!-- Mobil: filtre ikonu (huni) -->
         <button class="mobile-filter-btn" id="mobileFilterBtn" aria-label="Filtrele">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-badge" id="filterBadge" hidden></span>
         </button>
         <!-- Mobil: sıralama ikonu (yukarı aşağı ok) -->
         <div class="sort-icon-btn" aria-label="Sırala">
@@ -1347,6 +1366,23 @@ function cardHTML(p) {
 }
 
 /* ================================================================
+   FİLTRE BADGE SAYACI
+================================================================ */
+function updateFilterBadge() {
+  const badge = document.getElementById('filterBadge');
+  if (!badge) return;
+  /* Aktif filtre sayısı: tür + boyut seçimleri + fiyat değiştiyse +1 */
+  let count = activeFilters.tur.length + activeFilters.boyut.length;
+  if (activeFilters.priceMin > 0 || activeFilters.priceMax < 7000) count++;
+  if (count > 0) {
+    badge.textContent = count;
+    badge.removeAttribute('hidden');
+  } else {
+    badge.setAttribute('hidden', '');
+  }
+}
+
+/* ================================================================
    RENDER
 ================================================================ */
 function applyAndRender() {
@@ -1354,6 +1390,7 @@ function applyAndRender() {
   const grid = document.getElementById('productGrid');
   updateTitle();
   updateURL();
+  updateFilterBadge();
 
   document.getElementById('resultCount').textContent =
     filtered.length > 0 ? `${filtered.length} ürün` : '';
@@ -1391,6 +1428,7 @@ function bindCardEvents(container) {
       const id = btn.dataset.id;
       const product = PRODUCTS.find(p => p.id === id);
       if (product) addToCart(product);
+      btn.blur();
     });
   });
 
@@ -1400,6 +1438,7 @@ function bindCardEvents(container) {
       e.preventDefault(); e.stopPropagation();
       const id = btn.dataset.id;
       changeCartQty(id, btn.dataset.action === 'inc' ? 1 : -1);
+      btn.blur();
     });
   });
 }
