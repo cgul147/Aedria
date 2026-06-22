@@ -31,6 +31,8 @@
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
+  html { overflow-x: hidden; }
+
   body {
     font-family: 'Inter', sans-serif;
     background: var(--bg);
@@ -38,6 +40,7 @@
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
+    max-width: 100vw;
   }
 
   h1, h2, h3, h4 { font-family: 'Fraunces', serif; font-weight: 500; letter-spacing: -0.5px; }
@@ -114,29 +117,30 @@
   /* ---- Sepet item yeni tasarım ---- */
   .cart-item-list { display: flex; flex-direction: column; gap: 12px; }
   .cart-item {
-    display: flex; align-items: flex-start; gap: 12px;
+    display: flex; align-items: stretch; gap: 12px;
     padding: 12px; background: var(--cream); border-radius: var(--r-md); border: 1px solid var(--line);
   }
   .cart-item-img {
-    width: 58px; height: 58px; border-radius: 10px;
-    overflow: hidden; flex-shrink: 0;
+    width: 80px; flex-shrink: 0;
+    border-radius: 10px; overflow: hidden;
     background: var(--white); border: 1px solid var(--line);
+    align-self: stretch;
   }
   .cart-item-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
   /* Orta: isim + boyut + fiyat */
-  .cart-item-body { flex: 1; min-width: 0; }
-  .cart-item-name { font-family: 'Fraunces', serif; font-size: 13px; font-weight: 500; line-height: 1.35; margin-bottom: 2px; }
-  .cart-item-size { font-size: 11px; color: rgba(53,61,31,0.5); margin-bottom: 4px; }
-  .cart-item-price-row { font-size: 12px; color: rgba(53,61,31,0.6); }
+  .cart-item-body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .cart-item-name { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 500; line-height: 1.3; margin-bottom: 3px; }
+  .cart-item-size { font-size: 12px; color: rgba(53,61,31,0.5); margin-bottom: 5px; }
+  .cart-item-price-row { font-size: 13px; color: rgba(53,61,31,0.6); }
   /* Sağ kolon: üstte çöp kutusu, altında adet kontrolü */
   .cart-item-right {
     display: flex; flex-direction: column; align-items: flex-end;
     justify-content: space-between; gap: 8px; flex-shrink: 0;
     align-self: stretch;
   }
-  .cart-item-controls { display: flex; align-items: center; gap: 6px; }
+  .cart-item-controls { display: flex; align-items: center; gap: 8px; }
   .d-qty-btn {
-    width: 26px; height: 26px; border-radius: var(--r-pill);
+    width: 30px; height: 30px; border-radius: var(--r-pill);
     border: 1.5px solid var(--line); background: var(--white);
     cursor: pointer; display: flex; align-items: center; justify-content: center;
     transition: border-color .2s; flex-shrink: 0; color: var(--olive-dark);
@@ -147,8 +151,8 @@
   .d-qty-btn:focus { outline: none; box-shadow: none; border-color: var(--line); }
   .d-qty-btn:active { border-color: var(--olive); }
   .d-remove-btn { -webkit-tap-highlight-color: transparent; }
-  .d-qty-btn svg { width: 12px; height: 12px; }
-  .d-qty-display { font-size: 13px; font-weight: 600; min-width: 16px; text-align: center; }
+  .d-qty-btn svg { width: 13px; height: 13px; }
+  .d-qty-display { font-size: 14px; font-weight: 600; min-width: 18px; text-align: center; }
   .d-remove-btn {
     background: none; border: none; cursor: pointer;
     color: rgba(53,61,31,0.3); padding: 2px; transition: color .2s; flex-shrink: 0;
@@ -200,9 +204,11 @@
     grid-template-columns: 260px 1fr;
     gap: 0;
     max-width: 1280px;
+    width: 100%;
     margin: 0 auto;
     padding: 48px 5% 80px;
     align-items: start;
+    overflow-x: hidden;
   }
 
   /* ---- Sidebar ---- */
@@ -331,6 +337,9 @@
     flex-shrink: 0; position: relative;
   }
   .sort-icon-btn:hover { border-color: var(--olive); }
+  .sort-icon-btn:focus-within { outline: none; }
+  .sort-icon-btn:active { border-color: var(--olive); }
+  .sort-icon-btn:not(:active) { border-color: var(--line); }
   .sort-icon-btn svg { width: 17px; height: 17px; }
   /* Gizli native select — icon üstüne bindirilir, dokunulunca açılır */
   .sort-icon-btn select {
@@ -429,54 +438,50 @@
   }
 
   /* Kart bilgi alanı */
-  .card-info { padding: 20px; display: flex; flex-direction: column; flex: 1; }
+  .card-info { padding: 16px; display: flex; flex-direction: column; flex: 1; }
   .card-type { font-size: 11px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: var(--earth); margin-bottom: 4px; }
   .card-name { font-size: 15px; margin-bottom: 2px; line-height: 1.35; }
-  .card-size { font-size: 13px; color: rgba(53,61,31,0.55); margin-bottom: 14px; }
+  .card-size { font-size: 13px; color: rgba(53,61,31,0.55); margin-bottom: 12px; }
 
+  /* Masaüstü: fiyat ve buton yan yana */
   .card-footer {
     display: flex; align-items: center; justify-content: space-between;
-    gap: 6px; margin-top: auto; flex-wrap: nowrap;
+    gap: 10px; margin-top: auto;
   }
-
-  /* Fiyat */
   .card-price-wrap { display: flex; flex-direction: column; min-width: 0; }
   .card-price-old { font-size: 13px; color: rgba(53,61,31,0.4); text-decoration: line-through; line-height: 1.2; }
   .card-price {
-    font-family: 'Fraunces', serif; font-size: 18px; font-weight: 500;
+    font-family: 'Fraunces', serif; font-size: 20px; font-weight: 500;
     display: flex; align-items: baseline; gap: 2px; white-space: nowrap;
   }
-  .card-price .try-icon { font-size: 14px; }
-  .card-price-soon { font-size: 13px; color: rgba(53,61,31,0.5); font-style: italic; white-space: nowrap; }
+  .card-price .try-icon { font-size: 15px; }
+  .card-price-soon { font-size: 14px; color: rgba(53,61,31,0.5); font-style: italic; white-space: nowrap; }
 
-  /* Sepete ekle butonu — + ikonsuz, kompakt */
   .card-add-btn {
     display: flex; align-items: center; justify-content: center;
     background: var(--olive); color: var(--cream);
     border: none; border-radius: var(--r-pill);
-    padding: 8px 12px; font-size: 11px; font-weight: 500;
+    padding: 10px 18px; font-size: 13px; font-weight: 500;
     font-family: 'Inter', sans-serif; cursor: pointer;
     transition: background .25s; white-space: nowrap; flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
   }
   .card-add-btn:hover { background: var(--earth); }
 
-  /* Sepete ekle butonu — eklenmiş hali (mikro sepet) */
   .card-cart-controls {
-    display: none;
-    align-items: center; gap: 6px; flex-shrink: 0;
+    display: none; align-items: center; gap: 8px; flex-shrink: 0;
   }
   .card-cart-controls.visible { display: flex; }
   .card-add-btn.hidden { display: none; }
 
   .card-qty-btn {
-    width: 28px; height: 28px; border-radius: var(--r-pill);
+    width: 32px; height: 32px; border-radius: var(--r-pill);
     border: 1.5px solid var(--line); background: var(--white);
     cursor: pointer; display: flex; align-items: center; justify-content: center;
     transition: border-color .2s, background .2s; flex-shrink: 0;
     color: var(--olive-dark);
     -webkit-tap-highlight-color: transparent;
-    outline: none;
-    -webkit-appearance: none;
+    outline: none; -webkit-appearance: none;
   }
   @media (hover: hover) {
     .card-qty-btn:hover { border-color: var(--olive); background: var(--cream); }
@@ -484,9 +489,8 @@
   .card-qty-btn:focus { outline: none; box-shadow: none; }
   .card-qty-btn:active { border-color: var(--olive); background: var(--cream-soft); }
   .card-qty-btn:focus:not(:active) { border-color: var(--line); background: var(--white); }
-  .card-qty-btn svg { width: 13px; height: 13px; }
-  .card-qty-display { font-size: 14px; font-weight: 600; min-width: 18px; text-align: center; }
-  .card-add-btn { -webkit-tap-highlight-color: transparent; }
+  .card-qty-btn svg { width: 14px; height: 14px; }
+  .card-qty-display { font-size: 15px; font-weight: 600; min-width: 20px; text-align: center; }
 
   /* ---- Boş durum ---- */
   .empty-state {
@@ -567,17 +571,28 @@
   }
 
   @media (max-width: 560px) {
-    .product-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .card-info { padding: 12px; }
-    .card-name { font-size: 13px; }
+    .card-type { font-size: 10px; margin-bottom: 3px; }
+    .card-name { font-size: 13px; margin-bottom: 2px; }
     .card-size { font-size: 11px; margin-bottom: 10px; }
-    .card-price { font-size: 16px; }
-    .card-price .try-icon { font-size: 13px; }
-    .card-footer { gap: 6px; }
-    .card-add-btn { padding: 8px 11px; font-size: 12px; }
-    .card-qty-btn { width: 26px; height: 26px; }
-    .card-qty-btn svg { width: 12px; height: 12px; }
-    .card-qty-display { font-size: 13px; min-width: 16px; }
+    /* Mobilde dikey düzen: fiyat üstte, buton tam genişlik altta */
+    .card-footer {
+      flex-direction: column; align-items: stretch; gap: 8px;
+    }
+    .card-price { font-size: 18px; }
+    .card-price .try-icon { font-size: 14px; }
+    .card-add-btn {
+      width: 100%; padding: 11px 12px; font-size: 13px;
+      justify-content: center;
+    }
+    /* Qty kontrolleri de tam genişlik, büyük dokunma hedefi */
+    .card-cart-controls {
+      width: 100%; justify-content: space-between;
+    }
+    .card-qty-btn { width: 36px; height: 36px; }
+    .card-qty-btn svg { width: 14px; height: 14px; }
+    .card-qty-display { font-size: 16px; flex: 1; }
     .footer-grid { grid-template-columns: 1fr; gap: 28px; }
     .footer-bottom { flex-direction: column; }
     .newsletter-form { flex-direction: column; width: 100%; }
@@ -1077,6 +1092,7 @@ function renderDrawer() {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
         <h3>Sepetiniz boş</h3>
         <p>Henüz ürün eklemediniz.</p>
+        <a href="urunler.html" class="btn" style="display:inline-block;text-align:center;">Alışverişe Başla</a>
       </div>`;
     return;
   }
@@ -1239,6 +1255,7 @@ document.getElementById('sortSelect').addEventListener('change', e => {
 document.getElementById('sortSelectMobile').addEventListener('change', e => {
   activeSort = e.target.value;
   document.getElementById('sortSelect').value = e.target.value;
+  e.target.blur();
   applyAndRender();
 });
 

@@ -533,7 +533,7 @@
       </picture>
     </div>
   </div>
-  <a href="#urunler" class="btn hero-cta">Keşfet</a>
+  <a href="urunler.html" class="btn hero-cta">Keşfet</a>
   <div class="hero-indicators">
     <button class="hero-dot active" data-idx="0" aria-label="Slayt 1"></button>
     <button class="hero-dot" data-idx="1" aria-label="Slayt 2"></button>
@@ -826,7 +826,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
           <h3>Sepetiniz boş</h3>
           <p>Henüz ürün eklemediniz.</p>
-          <button class="btn" onclick="closeCart(); setTimeout(()=>document.getElementById('urunler').scrollIntoView({behavior:'smooth'}),300)">Alışverişe Başla</button>
+          <button class="btn" onclick="closeCart(); window.location.href='urunler.html';">Alışverişe Başla</button>
         </div>`;
       return;
     }
