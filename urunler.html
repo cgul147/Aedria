@@ -579,23 +579,20 @@
     .card-type { font-size: 10px; margin-bottom: 3px; }
     .card-name { font-size: 13px; margin-bottom: 2px; }
     .card-size { font-size: 11px; margin-bottom: 10px; }
-    /* Mobilde dikey düzen: fiyat üstte, buton tam genişlik altta */
-    .card-footer {
-      flex-direction: column; align-items: stretch; gap: 8px;
+    /* Mobilde: fiyat üstte, buton tam genişlik altta */
+    .card-footer { flex-direction: column; align-items: stretch; gap: 8px; }
+    .card-price { font-size: 16px; }
+    .card-price .try-icon { font-size: 12px; }
+    .card-add-btn { width: 100%; padding: 11px 12px; font-size: 13px; justify-content: center; }
+    /* Stepper varken: fiyatla aynı satır, yatay düzen */
+    .card-footer:has(.card-cart-controls.visible),
+    .card-footer.has-controls {
+      flex-direction: row; align-items: center; justify-content: space-between; gap: 6px;
     }
-    .card-price { font-size: 18px; }
-    .card-price .try-icon { font-size: 14px; }
-    .card-add-btn {
-      width: 100%; padding: 11px 12px; font-size: 13px;
-      justify-content: center;
-    }
-    /* Qty kontrolleri de tam genişlik, büyük dokunma hedefi */
-    .card-cart-controls {
-      width: 100%; justify-content: space-between;
-    }
-    .card-qty-btn { width: 36px; height: 36px; }
-    .card-qty-btn svg { width: 14px; height: 14px; }
-    .card-qty-display { font-size: 16px; flex: 1; }
+    .card-cart-controls { width: auto; justify-content: flex-end; flex-shrink: 0; gap: 4px; }
+    .card-qty-btn { width: 26px; height: 26px; }
+    .card-qty-btn svg { width: 11px; height: 11px; }
+    .card-qty-display { font-size: 13px; min-width: 14px; flex: unset; }
     .footer-grid { grid-template-columns: 1fr; gap: 28px; }
     .footer-bottom { flex-direction: column; }
     .newsletter-form { flex-direction: column; width: 100%; }
@@ -1061,16 +1058,17 @@ function updateCardControls(productId) {
   const qty = getCartQty(productId);
   const card = document.querySelector(`.product-card[data-id="${productId}"]`);
   if (!card) return;
-  const addBtn = card.querySelector('.card-add-btn');
+  const addBtn  = card.querySelector('.card-add-btn');
   const controls = card.querySelector('.card-cart-controls');
+  const footer   = card.querySelector('.card-footer');
   const qtyDisplay = card.querySelector('.card-qty-display');
-  const decBtn = card.querySelector('[data-action="dec"]');
+  const decBtn  = card.querySelector('[data-action="dec"]');
 
   if (qty > 0) {
     addBtn.classList.add('hidden');
     controls.classList.add('visible');
+    footer.classList.add('has-controls');
     qtyDisplay.textContent = qty;
-    /* 1 adette çöp kutusu, birden fazlada eksi */
     if (qty === 1) {
       decBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`;
     } else {
@@ -1079,6 +1077,7 @@ function updateCardControls(productId) {
   } else {
     addBtn.classList.remove('hidden');
     controls.classList.remove('visible');
+    footer.classList.remove('has-controls');
   }
 }
 
@@ -1367,7 +1366,7 @@ function cardHTML(p) {
         <div class="card-type">${p.typeLabel}</div>
         <div class="card-name">${p.name}</div>
         <div class="card-size">${p.size}</div>
-        <div class="card-footer">
+        <div class="card-footer${qty > 0 ? ' has-controls' : ''}">
           <div class="card-price-wrap">${priceHTML}</div>
           ${canBuy ? `
           <button class="card-add-btn${addHidden}" data-id="${p.id}" aria-label="${p.name} ${p.size} sepete ekle">
