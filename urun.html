@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ürün Detayı — AEDRIA</title>
+<link rel="icon" type="image/png" sizes="32x32" href="aedria-favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="aedria-apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --white: #FFFFFF;
+    --bg: #FFFFFF;
+    --cream: #FBF9F4;
+    --cream-soft: #F6F1E4;
+    --cream-dark: #ECE4D0;
+    --olive-dark: #353D1F;
+    --olive: #6E7E3E;
+    --olive-soft: #87964F;
+    --earth: #9A6B43;
+    --red: #C0392B;
+    --line: rgba(53,61,31,0.10);
+    --shadow: 0 18px 56px rgba(53,61,31,0.10);
+    --r-sm: 14px;
+    --r-md: 22px;
+    --r-lg: 32px;
+    --r-pill: 999px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { overflow-x: hidden; scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--olive-dark);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    max-width: 100vw;
+    padding-bottom: 0;
+  }
+  h1, h2, h3, h4 { font-family: 'Fraunces', serif; font-weight: 500; letter-spacing: -0.5px; }
+  a { text-decoration: none; color: inherit; }
+  img { display: block; max-width: 100%; }
+  button, input { font-family: inherit; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--earth); outline-offset: 3px; }
+
+  .navbar {
+    position: sticky; top: 0; z-index: 30;
+    height: 96px;
+    display: flex; align-items: center; gap: 32px;
+    padding: 0 8%;
+    background: rgba(255,255,255,0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+    overflow: visible;
+  }
+  .navbar .logo { margin-right: auto; line-height: 0; }
+  .navbar .logo img { height: 140px; width: auto; display: block; }
+  .navbar nav { display: flex; gap: 32px; }
+  .navbar nav a { font-size: 14px; letter-spacing: 0.3px; transition: color .2s; }
+  .navbar nav a:hover, .navbar nav a.active { color: var(--earth); }
+  .menu-toggle { display: none; background: none; border: none; cursor: pointer; color: var(--olive-dark); padding: 4px; }
+
+  .cart-btn {
+    position: relative; display: flex; align-items: center; justify-content: center;
+    background: none; border: none; cursor: pointer; color: var(--olive-dark);
+    padding: 4px; transition: color .2s;
+  }
+  .cart-btn:hover { color: var(--earth); }
+  .cart-btn svg { width: 24px; height: 24px; }
+  .cart-badge {
+    position: absolute; top: -5px; right: -5px;
+    background: var(--earth); color: #fff;
+    font-size: 11px; font-weight: 700; line-height: 1;
+    min-width: 18px; height: 18px; border-radius: var(--r-pill);
+    display: flex; align-items: center; justify-content: center; padding: 0 4px;
+  }
+  .cart-badge[hidden] { display: none; }
+
+  .mobile-menu {
+    position: fixed; top: 0; left: 0; bottom: 0;
+    width: 78%; max-width: 320px;
+    background: var(--white); z-index: 80;
+    padding: 90px 32px 32px;
+    transform: translateX(-100%); transition: transform .35s ease;
+    box-shadow: 8px 0 40px rgba(53,61,31,0.12);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .mobile-menu.open { transform: translateX(0); }
+  .mobile-menu a { font-family: 'Fraunces', serif; font-size: 22px; padding: 14px 0; border-bottom: 1px solid rgba(53,61,31,0.1); }
+  .mobile-menu a.active { color: var(--earth); }
+  .mobile-menu .close-btn { position: absolute; top: 24px; right: 28px; background: none; border: none; cursor: pointer; color: var(--olive-dark); }
+  .menu-overlay, .cart-overlay {
+    position: fixed; inset: 0; background: rgba(40,46,24,0.4);
+    opacity: 0; visibility: hidden; transition: opacity .35s, visibility .35s;
+  }
+  .menu-overlay { z-index: 70; }
+  .cart-overlay { z-index: 90; }
+  .menu-overlay.open, .cart-overlay.open { opacity: 1; visibility: visible; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--olive); color: var(--cream);
+    padding: 15px 34px; border-radius: var(--r-pill);
+    font-size: 14px; letter-spacing: 0.4px; font-weight: 600;
+    border: none; cursor: pointer; transition: background .25s, transform .25s, opacity .25s;
+    text-align: center;
+  }
+  .btn:hover { background: var(--earth); transform: translateY(-2px); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+  .btn-secondary { background: var(--cream-soft); color: var(--olive-dark); }
+  .btn-secondary:hover { background: var(--cream-dark); color: var(--olive-dark); }
+
+  .product-page { background: linear-gradient(180deg, var(--white) 0%, var(--white) 48%, var(--cream) 48%, var(--cream) 100%); }
+  .container { max-width: 1240px; margin: 0 auto; padding: 0 5%; }
+
+  .breadcrumb {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    font-size: 13px; color: rgba(53,61,31,0.56);
+    padding: 32px 0 22px;
+  }
+  .breadcrumb a { transition: color .2s; }
+  .breadcrumb a:hover { color: var(--earth); }
+  .breadcrumb span:last-child { color: var(--olive-dark); }
+
+  .product-hero {
+    display: grid; grid-template-columns: minmax(0, 1.02fr) minmax(420px, .98fr);
+    gap: clamp(36px, 6vw, 84px);
+    align-items: start;
+    padding-bottom: 72px;
+  }
+
+  .gallery { position: sticky; top: 126px; }
+  .main-image-card {
+    position: relative;
+    border-radius: var(--r-lg);
+    background: radial-gradient(circle at 50% 38%, rgba(255,255,255,.9), var(--cream-soft) 64%);
+    border: 1px solid var(--line);
+    min-height: 610px;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .main-image-card::before {
+    content: '';
+    position: absolute; width: 72%; height: 72%; border-radius: 50%;
+    background: rgba(236,228,208,.56);
+    filter: blur(1px);
+  }
+  .main-product-image {
+    position: relative; z-index: 1;
+    width: 100%; height: 100%; max-height: 610px;
+    object-fit: cover;
+    transition: transform .5s ease;
+  }
+  @media (hover:hover) {
+    .main-image-card:hover .main-product-image { transform: scale(1.075); }
+  }
+  .gallery-badges {
+    position: absolute; top: 18px; left: 18px; z-index: 2;
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .gallery-badge {
+    display: inline-flex; align-items: center; padding: 6px 12px;
+    border-radius: var(--r-pill); background: rgba(255,255,255,.86);
+    color: var(--olive-dark); border: 1px solid rgba(53,61,31,.08);
+    font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+  }
+  .thumbs {
+    display: flex; gap: 12px; margin-top: 16px;
+  }
+  .thumb {
+    width: 82px; height: 82px; border-radius: 18px; border: 1px solid var(--line);
+    background: var(--cream); cursor: pointer; overflow: hidden;
+    transition: border-color .2s, transform .2s;
+    padding: 0;
+  }
+  .thumb.active { border-color: var(--olive); transform: translateY(-2px); }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .gallery-dots { display: none; justify-content: center; gap: 7px; margin-top: 14px; }
+  .gallery-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(53,61,31,.22); border: none; padding: 0; }
+  .gallery-dot.active { background: var(--olive); }
+
+  .product-info { padding-top: 8px; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--earth); margin-bottom: 10px; }
+  .product-title { font-size: clamp(32px, 3.2vw, 44px); line-height: 1.08; margin-bottom: 18px; }
+  .product-desc { font-size: 17px; color: rgba(53,61,31,.68); max-width: 590px; margin-bottom: 22px; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 30px; max-width: 520px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1px solid var(--line); background: var(--cream);
+    border-radius: var(--r-pill); padding: 7px 12px;
+    font-size: 12px; font-weight: 600; color: rgba(53,61,31,.78);
+  }
+  .chip::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--olive-soft); }
+
+  .buy-box {
+    background: var(--white); border: 1px solid var(--line);
+    border-radius: var(--r-lg); padding: 26px;
+    box-shadow: 0 12px 36px rgba(53,61,31,.07);
+  }
+  .price-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+  .price { font-family: 'Fraunces', serif; font-size: 38px; line-height: 1; }
+  .price-note { font-size: 12px; color: rgba(53,61,31,.55); margin-top: 5px; }
+  .stock-msg { font-size: 13px; font-weight: 600; color: var(--red); text-align: right; }
+  .stock-msg[hidden] { display: none; }
+
+  .option-block { margin-bottom: 22px; }
+  .option-label { display: flex; justify-content: space-between; gap: 14px; font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+  .variant-pills { display: flex; flex-wrap: wrap; gap: 10px; }
+  .variant-pill {
+    border: 1px solid var(--line); background: var(--cream); color: var(--olive-dark);
+    border-radius: var(--r-pill); padding: 10px 16px;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    transition: background .2s, border-color .2s, color .2s;
+  }
+  .variant-pill:hover { border-color: var(--olive); }
+  .variant-pill.active { background: var(--olive-dark); color: var(--cream); border-color: var(--olive-dark); }
+  .variant-pill.out { opacity: .45; }
+
+  .purchase-row { display: grid; grid-template-columns: 132px 1fr; gap: 12px; align-items: center; }
+  .qty-selector {
+    height: 52px; border: 1px solid var(--line); border-radius: var(--r-pill);
+    display: flex; align-items: center; justify-content: space-between; padding: 0 10px;
+    background: var(--cream);
+  }
+  .qty-btn {
+    width: 32px; height: 32px; border-radius: 50%; border: 1px solid transparent;
+    background: var(--white); color: var(--olive-dark); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .qty-btn:hover { border-color: var(--olive); }
+  .qty-value { font-size: 15px; font-weight: 700; min-width: 24px; text-align: center; }
+
+  .service-list {
+    display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px;
+    margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--line);
+  }
+  .service-item { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: rgba(53,61,31,.72); }
+  .service-icon {
+    flex: 0 0 28px; width: 28px; height: 28px; border-radius: 50%;
+    background: var(--cream-soft); color: var(--olive); display: flex; align-items: center; justify-content: center;
+  }
+  .service-icon svg { width: 15px; height: 15px; }
+
+  .details-section { padding: 72px 0 36px; background: var(--cream); }
+  .details-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 420px); gap: 42px; align-items: start; }
+  .section-kicker { font-size: 12px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; color: var(--earth); margin-bottom: 8px; }
+  .section-title { font-size: clamp(30px, 4vw, 46px); line-height: 1.08; margin-bottom: 22px; }
+  .accordion { display: flex; flex-direction: column; gap: 12px; }
+  .accordion-item { background: var(--white); border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; }
+  .accordion-trigger {
+    width: 100%; background: transparent; border: none; cursor: pointer;
+    padding: 19px 22px; display: flex; align-items: center; justify-content: space-between; gap: 20px;
+    color: var(--olive-dark); text-align: left;
+  }
+  .accordion-trigger span { font-size: 16px; font-weight: 700; }
+  .accordion-trigger svg { width: 18px; height: 18px; transition: transform .25s; }
+  .accordion-item.open .accordion-trigger svg { transform: rotate(45deg); }
+  .accordion-panel { display: none; padding: 0 22px 20px; color: rgba(53,61,31,.68); font-size: 15px; }
+  .accordion-item.open .accordion-panel { display: block; }
+
+  .spec-card {
+    background: var(--white); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 26px;
+    position: sticky; top: 126px;
+  }
+  .spec-card h3 { font-size: 24px; margin-bottom: 18px; }
+  .feature-icons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 22px; }
+  .feature-icon {
+    background: var(--cream); border: 1px solid var(--line); border-radius: 18px; padding: 13px 15px;
+    min-height: 84px; display: flex; flex-direction: column; gap: 6px;
+  }
+  .feature-icon svg { width: 22px; height: 22px; color: var(--olive); }
+  .feature-icon span { font-size: 13px; font-weight: 700; line-height: 1.3; }
+  .spec-table { border-top: 1px solid var(--line); }
+  .spec-row { display: grid; grid-template-columns: 42% 58%; gap: 14px; padding: 13px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+  .spec-row:last-child { border-bottom: 0; padding-bottom: 0; }
+  .spec-row dt { color: rgba(53,61,31,.55); }
+  .spec-row dd { font-weight: 700; }
+
+  .related-section { padding: 40px 0 86px; background: var(--cream); }
+  .related-head { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 24px; }
+  .related-head h2 { font-size: clamp(28px, 4vw, 42px); line-height: 1.1; }
+  .related-head a { font-size: 14px; font-weight: 700; color: var(--earth); }
+  .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .product-card {
+    background: var(--white); border-radius: var(--r-lg); overflow: hidden;
+    border: 1px solid var(--line); transition: transform .3s, box-shadow .3s;
+    display: flex; flex-direction: column;
+  }
+  @media (hover:hover) {
+    .product-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(53,61,31,0.1); }
+    .product-card:hover .card-img-wrap img { transform: scale(1.04); }
+  }
+  .card-img-wrap { position: relative; aspect-ratio: 1/1; overflow: hidden; background: var(--cream-soft); }
+  .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+  .card-info { padding: 16px; display: flex; flex-direction: column; flex: 1; }
+  .card-type { font-size: 11px; font-weight: 700; letter-spacing: .9px; text-transform: uppercase; color: var(--earth); margin-bottom: 4px; }
+  .card-name { font-family: 'Fraunces', serif; font-size: 20px; line-height: 1.25; margin-bottom: 4px; }
+  .card-size { font-size: 13px; color: rgba(53,61,31,.55); margin-bottom: 16px; }
+  .card-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; }
+  .card-price { font-family: 'Fraunces', serif; font-size: 24px; line-height: 1; }
+  .card-price-soon { font-size: 13px; color: rgba(53,61,31,.55); font-weight: 700; }
+  .mini-add {
+    border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--cream); color: var(--olive-dark);
+    font-size: 12px; font-weight: 700; padding: 9px 13px; cursor: pointer;
+  }
+  .mini-add:hover { border-color: var(--olive); }
+
+  .cart-drawer {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: 100%; max-width: 420px; background: var(--white); z-index: 100;
+    transform: translateX(100%); transition: transform .35s ease;
+    display: flex; flex-direction: column;
+    box-shadow: -8px 0 40px rgba(53,61,31,0.14);
+    overflow-x: hidden;
+  }
+  .cart-drawer.open { transform: translateX(0); }
+  .cart-drawer-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 28px; border-bottom: 1px solid var(--line); flex-shrink: 0;
+  }
+  .cart-drawer-header h2 { font-size: 22px; }
+  .cart-close-btn { background: none; border: none; cursor: pointer; color: var(--olive-dark); padding: 4px; }
+  .cart-drawer-body { flex: 1; overflow-y: auto; padding: 20px 24px; }
+  .cart-empty { text-align: center; padding: 60px 0; }
+  .cart-empty svg { width: 64px; height: 64px; color: rgba(53,61,31,0.15); margin: 0 auto 20px; }
+  .cart-empty h3 { font-size: 22px; margin-bottom: 10px; }
+  .cart-empty p { font-size: 15px; color: rgba(53,61,31,0.6); margin-bottom: 28px; }
+  .cart-item-list { display: flex; flex-direction: column; gap: 12px; }
+  .cart-item {
+    position: relative; display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px; background: var(--cream); border-radius: var(--r-md); border: 1px solid var(--line);
+  }
+  .cart-item-img { width: 64px; height: 64px; border-radius: 8px; overflow: hidden; flex-shrink: 0; background: var(--white); border: 1px solid var(--line); }
+  .cart-item-img img { width: 100%; height: 100%; object-fit: cover; }
+  .cart-item-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .cart-item-name { font-family: 'Fraunces', serif; font-size: 15px; line-height: 1.35; padding-right: 24px; }
+  .cart-item-size { font-size: 12px; color: rgba(53,61,31,0.5); }
+  .cart-item-price-row { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+  .cart-item-total { font-family: 'Fraunces', serif; font-size: 16px; color: var(--olive-dark); }
+  .cart-item-controls { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+  .cart-item-remove { position: absolute; top: 10px; right: 10px; background: none; border: none; cursor: pointer; color: rgba(53,61,31,0.3); padding: 2px; line-height: 0; }
+  .cart-item-remove:hover { color: var(--earth); }
+  .cart-item-remove svg, .d-qty-btn svg { width: 14px; height: 14px; display: block; }
+  .d-qty-btn {
+    width: 28px; height: 28px; border-radius: var(--r-pill);
+    border: 1.5px solid var(--line); background: var(--white); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; color: var(--olive-dark);
+  }
+  .d-qty-display { font-size: 14px; font-weight: 700; min-width: 18px; text-align: center; }
+  .cart-drawer-footer { padding: 16px 24px 24px; border-top: 1px solid var(--line); flex-shrink: 0; }
+  .cart-total-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+  .cart-total-label { font-size: 15px; color: rgba(53,61,31,0.7); }
+  .cart-total-amount { font-family: 'Fraunces', serif; font-size: 26px; }
+  .drawer-actions { display: grid; grid-template-columns: 1fr; gap: 10px; }
+
+  .sticky-add {
+    position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 45;
+    background: rgba(255,255,255,.94); backdrop-filter: blur(14px);
+    border: 1px solid var(--line); box-shadow: 0 12px 34px rgba(53,61,31,.16);
+    border-radius: 24px; padding: 10px; display: none; align-items: center; gap: 12px;
+    transform: translateY(140%); transition: transform .3s ease;
+  }
+  .sticky-add.show { transform: translateY(0); }
+  .sticky-info { flex: 1; min-width: 0; padding-left: 8px; }
+  .sticky-name { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sticky-price { font-family: 'Fraunces', serif; font-size: 20px; line-height: 1.1; }
+  .sticky-add .btn { padding: 13px 18px; white-space: nowrap; }
+
+  .footer { background: var(--olive-dark); color: var(--cream); padding: 64px 8% 28px; }
+  .footer-newsletter { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; padding-bottom: 42px; border-bottom: 1px solid rgba(246,241,228,0.16); margin-bottom: 42px; }
+  .footer-newsletter h3 { font-size: 28px; margin-bottom: 6px; }
+  .footer-newsletter p { color: rgba(246,241,228,0.68); }
+  .newsletter-form { display: flex; gap: 10px; }
+  .newsletter-form input { width: 280px; border-radius: var(--r-pill); border: 1px solid rgba(246,241,228,.24); background: rgba(255,255,255,.08); color: var(--cream); padding: 0 18px; min-height: 48px; }
+  .newsletter-form input::placeholder { color: rgba(246,241,228,.55); }
+  .newsletter-success { display: none; color: var(--cream); background: rgba(255,255,255,.09); border: 1px solid rgba(246,241,228,.18); padding: 12px 16px; border-radius: var(--r-md); margin: -20px 0 30px; }
+  .newsletter-success.show { display: block; }
+  .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 36px; }
+  .footer-brand .logo { font-family: 'Fraunces', serif; font-size: 30px; margin-bottom: 14px; }
+  .footer-brand p, .footer-col a, .footer-col span { color: rgba(246,241,228,0.68); font-size: 14px; }
+  .footer-col { display: flex; flex-direction: column; gap: 10px; }
+  .footer-col h4 { font-family: 'Inter', sans-serif; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; color: var(--cream); }
+  .footer-bottom { display: flex; justify-content: space-between; gap: 18px; flex-wrap: wrap; margin-top: 46px; padding-top: 22px; border-top: 1px solid rgba(246,241,228,0.16); color: rgba(246,241,228,0.58); font-size: 13px; }
+
+  @media (max-width: 980px) {
+    .navbar { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; padding: 0 5%; }
+    .menu-toggle { display: flex; align-items: center; order: 1; justify-self: start; }
+    .navbar .logo { order: 2; margin-right: 0; text-align: center; }
+    .navbar .logo img { height: 120px; }
+    .navbar nav { display: none; }
+    .cart-btn { order: 3; justify-self: end; }
+    .product-hero { grid-template-columns: 1fr; gap: 34px; }
+    .gallery, .spec-card { position: static; }
+    .main-image-card { min-height: auto; aspect-ratio: 4/5; }
+    .details-grid { grid-template-columns: 1fr; }
+    .product-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-newsletter, .footer-grid { grid-template-columns: 1fr; }
+    .newsletter-form { max-width: 520px; }
+    .newsletter-form input { flex: 1; width: auto; }
+  }
+
+  @media (max-width: 680px) {
+    body { padding-bottom: 92px; }
+    .container { padding: 0 18px; }
+    .breadcrumb { padding-top: 22px; }
+    .product-hero { padding-bottom: 44px; }
+    .product-title { font-size: 34px; }
+    .product-desc { font-size: 15px; }
+    .thumbs { display: none; }
+    .gallery-dots { display: flex; }
+    .buy-box { padding: 20px; border-radius: 26px; }
+    .price { font-size: 34px; }
+    .purchase-row { grid-template-columns: 1fr; }
+    .service-list { grid-template-columns: 1fr; }
+    .details-section { padding-top: 54px; }
+    .feature-icons { grid-template-columns: 1fr 1fr; }
+    .spec-card { padding: 20px; }
+    .spec-row { grid-template-columns: 1fr; gap: 2px; }
+    .related-head { align-items: flex-start; flex-direction: column; }
+    .product-grid { grid-template-columns: 1fr; gap: 16px; }
+    .sticky-add { display: flex; }
+    .footer { padding: 50px 18px 28px; }
+    .newsletter-form { flex-direction: column; }
+    .newsletter-form input { width: 100%; min-height: 48px; }
+    .cart-drawer { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<header class="navbar">
+  <button class="menu-toggle" id="menuToggle" aria-label="Menüyü aç">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="8" x2="21" y2="8"/><line x1="3" y1="16" x2="21" y2="16"/></svg>
+  </button>
+  <a href="index.html" class="logo" aria-label="AEDRIA Ana Sayfa"><img src="aedria-logo.jpeg" alt="AEDRIA"></a>
+  <nav>
+    <a href="index.html#hikayemiz">Hikayemiz</a>
+    <a href="urunler.html" class="active">Ürünlerimiz</a>
+    <a href="index.html#iletisim">İletişim</a>
+  </nav>
+  <button class="cart-btn" id="cartBtn" aria-label="Sepet">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+    <span class="cart-badge" id="cartBadge" hidden>0</span>
+  </button>
+</header>
+
+<div class="menu-overlay" id="menuOverlay"></div>
+<nav class="mobile-menu" id="mobileMenu" aria-label="Mobil menü">
+  <button class="close-btn" id="menuClose" aria-label="Menüyü kapat">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+  </button>
+  <a href="index.html#ana-sayfa">Ana Sayfa</a>
+  <a href="index.html#hikayemiz">Hikayemiz</a>
+  <a href="urunler.html" class="active">Ürünlerimiz</a>
+  <a href="index.html#iletisim">İletişim</a>
+</nav>
+
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-label="Sepet özeti" aria-hidden="true">
+  <div class="cart-drawer-header">
+    <h2>Sepetim</h2>
+    <button class="cart-close-btn" id="cartClose" aria-label="Sepeti kapat">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="cart-drawer-body" id="cartDrawerBody"></div>
+  <div class="cart-drawer-footer" id="cartDrawerFooter"></div>
+</aside>
+
+<main class="product-page">
+  <div class="container">
+    <div class="breadcrumb" aria-label="Breadcrumb">
+      <a href="index.html">Ana Sayfa</a>
+      <span>/</span>
+      <a href="urunler.html">Ürünlerimiz</a>
+      <span>/</span>
+      <span id="breadcrumbProduct">Ürün</span>
+    </div>
+
+    <section class="product-hero" id="productHero">
+      <div class="gallery" aria-label="Ürün görselleri">
+        <div class="main-image-card" id="mainImageCard">
+          <div class="gallery-badges" id="galleryBadges"></div>
+          <img class="main-product-image" id="mainProductImage" src="aedria-erken-hasat.png" alt="AEDRIA ürün görseli">
+        </div>
+        <div class="thumbs" id="thumbs"></div>
+        <div class="gallery-dots" id="galleryDots"></div>
+      </div>
+
+      <div class="product-info">
+        <div class="eyebrow" id="productEyebrow">AEDRIA</div>
+        <h1 class="product-title" id="productTitle">Ürün</h1>
+        <p class="product-desc" id="productDesc"></p>
+        <div class="chips" id="productChips"></div>
+
+        <div class="buy-box" id="buyBox">
+          <div class="price-row">
+            <div>
+              <div class="price" id="productPrice">₺—</div>
+              <div class="price-note" id="priceNote">KDV dahil</div>
+            </div>
+            <div class="stock-msg" id="stockMsg" hidden>Stokta yok</div>
+          </div>
+
+          <div class="option-block" id="variantBlock">
+            <div class="option-label">
+              <span>Boyut</span>
+            </div>
+            <div class="variant-pills" id="variantPills"></div>
+          </div>
+
+          <div class="purchase-row">
+            <div class="qty-selector" aria-label="Adet seçici">
+              <button class="qty-btn" id="qtyMinus" aria-label="Adet azalt">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+              <span class="qty-value" id="qtyValue">1</span>
+              <button class="qty-btn" id="qtyPlus" aria-label="Adet artır">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+            </div>
+            <button class="btn" id="addToCartBtn">Sepete Ekle</button>
+          </div>
+
+          <div class="service-list">
+            <div class="service-item"><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span>Güvenli ödeme</span></div>
+            <div class="service-item"><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73L13 2.27a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></span><span>Özenli paketleme</span></div>
+            <div class="service-item"><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h11v10H3z"/><path d="M14 10h4l3 3v4h-7z"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="17.5" cy="17.5" r="1.5"/></svg></span><span>1–3 iş günü içinde kargo</span></div>
+            <div class="service-item"><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8h10l1 13H6L7 8z"/><path d="M10 8V4h4v4"/><path d="M9 14h6"/></svg></span><span>Cam şişe korumalı gönderim</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="details-section">
+    <div class="container details-grid">
+      <div>
+        <div class="section-kicker">Ürün Detayları</div>
+        <h2 class="section-title">Zeytinin karakterini sade ve net anlatan detaylar.</h2>
+        <div class="accordion" id="accordion"></div>
+      </div>
+      <aside class="spec-card">
+        <h3>Öne Çıkan Özellikler</h3>
+        <div class="feature-icons" id="featureIcons"></div>
+        <dl class="spec-table" id="specTable"></dl>
+      </aside>
+    </div>
+  </section>
+
+  <section class="related-section">
+    <div class="container">
+      <div class="related-head">
+        <h2>Bunları da Beğenebilirsiniz</h2>
+        <a href="urunler.html">Tüm ürünleri gör</a>
+      </div>
+      <div class="product-grid" id="relatedGrid"></div>
+    </div>
+  </section>
+</main>
+
+<div class="sticky-add" id="stickyAdd">
+  <div class="sticky-info">
+    <div class="sticky-name" id="stickyName">Ürün</div>
+    <div class="sticky-price" id="stickyPrice">₺—</div>
+  </div>
+  <button class="btn" id="stickyAddBtn">Sepete Ekle</button>
+</div>
+
+<footer class="footer" id="iletisim">
+  <div class="footer-newsletter">
+    <div class="footer-newsletter-text">
+      <h3>Bültenimize katılın</h3>
+      <p>Yeni hasatlar, özel setler ve kampanyalardan ilk siz haberdar olun.</p>
+    </div>
+    <form class="newsletter-form" id="newsletterForm">
+      <input type="email" id="newsletterEmail" placeholder="E-posta adresiniz" aria-label="E-posta adresiniz" required>
+      <button type="submit" class="btn">Abone Ol</button>
+    </form>
+  </div>
+  <p class="newsletter-success" id="newsletterSuccess">Teşekkürler! Başarıyla abone oldunuz.</p>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">AEDRIA</div>
+      <p>Edremit'in Ege zeytinliklerinden, üç nesildir soğuk sıkım naturel sızma zeytinyağı.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Menü</h4>
+      <a href="index.html">Ana Sayfa</a>
+      <a href="index.html#hikayemiz">Hikayemiz</a>
+      <a href="urunler.html">Ürünlerimiz</a>
+      <a href="index.html#iletisim">İletişim</a>
+    </div>
+    <div class="footer-col">
+      <h4>İletişim</h4>
+      <a href="mailto:info@aedria.com">info@aedria.com</a>
+      <a href="tel:+900000000000">+90 000 000 00 00</a>
+      <span>İzmir, Türkiye</span>
+    </div>
+    <div class="footer-col">
+      <h4>Sözleşmeler</h4>
+      <a href="#">Mesafeli Satış Sözleşmesi</a>
+      <a href="#">Gizlilik Politikası</a>
+      <a href="#">İptal ve İade</a>
+      <a href="#">KVKK Aydınlatma Metni</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>© 2026 AEDRIA. Tüm hakları saklıdır.</div>
+    <div style="display:flex;gap:18px;">
+      <a href="#" style="color:rgba(246,241,228,0.7);">Instagram</a>
+      <a href="#" style="color:rgba(246,241,228,0.7);">Facebook</a>
+      <a href="#" style="color:rgba(246,241,228,0.7);">WhatsApp</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const CATALOG = [
+  { id:'erken-hasat-500', group:'erken-hasat', name:'Erken Hasat Natürel Sızma Zeytinyağı', typeLabel:'Erken Hasat', size:'500 ml', volume:'500 ml', price:890, inStock:true, image:'aedria-erken-hasat.png', sortOrder:1 },
+  { id:'erken-hasat-750', group:'erken-hasat', name:'Erken Hasat Natürel Sızma Zeytinyağı', typeLabel:'Erken Hasat', size:'750 ml', volume:'750 ml', price:1170, inStock:true, image:'aedria-erken-hasat.png', sortOrder:2 },
+  { id:'erken-hasat-2000', group:'erken-hasat', name:'Erken Hasat Natürel Sızma Zeytinyağı', typeLabel:'Erken Hasat', size:'2000 ml', volume:'2000 ml', price:2685, inStock:true, image:'aedria-erken-hasat.png', sortOrder:3 },
+  { id:'erken-hasat-5000', group:'erken-hasat', name:'Erken Hasat Natürel Sızma Zeytinyağı', typeLabel:'Erken Hasat', size:'5000 ml', volume:'5000 ml', price:5190, inStock:true, image:'aedria-erken-hasat.png', sortOrder:4 },
+  { id:'daily-500', group:'daily', name:'Günlük Natürel Sızma Zeytinyağı', typeLabel:'Günlük', size:'500 ml', volume:'500 ml', price:830, inStock:true, image:'aedria-daily.png', sortOrder:5 },
+  { id:'daily-750', group:'daily', name:'Günlük Natürel Sızma Zeytinyağı', typeLabel:'Günlük', size:'750 ml', volume:'750 ml', price:1080, inStock:true, image:'aedria-daily.png', sortOrder:6 },
+  { id:'daily-2000', group:'daily', name:'Günlük Natürel Sızma Zeytinyağı', typeLabel:'Günlük', size:'2000 ml', volume:'2000 ml', price:2590, inStock:true, image:'aedria-daily.png', sortOrder:7 },
+  { id:'daily-5000', group:'daily', name:'Günlük Natürel Sızma Zeytinyağı', typeLabel:'Günlük', size:'5000 ml', volume:'5000 ml', price:5085, inStock:true, image:'aedria-daily.png', sortOrder:8 },
+  { id:'ozel-set-ikili', group:'ozel-set', name:'İkili Özel Set', typeLabel:'Özel Set', size:'Erken Hasat + Günlük', volume:'İkili set', price:null, inStock:true, image:'aedria-ozel-set.png', sortOrder:9 },
+  { id:'ozel-set-premium', group:'ozel-set', name:'Premium Özel Set', typeLabel:'Özel Set', size:'Erken Hasat x2', volume:'İkili set', price:null, inStock:false, image:'aedria-ozel-set.png', sortOrder:10 }
+];
+
+const GROUP_CONTENT = {
+  'erken-hasat': {
+    eyebrow: 'YOĞUN · YÜKSEK POLİFENOL',
+    desc: 'Edremit’in erken hasat zeytinlerinden, düşük asit oranı ve yoğun meyvemsi aromasıyla soğuk sıkım premium zeytinyağı.',
+    chips: ['Soğuk Sıkım', 'Düşük Asit', 'Yüksek Polifenol'],
+    galleryBadges: [],
+    features: ['Soğuk Sıkım', 'Erken Hasat', 'Yüksek Polifenol', 'Düşük Asit'],
+    specs: { 'Zeytin Türü':'Edremit', 'Ürün Tipi':'Natürel Sızma Zeytinyağı', 'Sıkım Yöntemi':'Soğuk Sıkım', 'Hasat':'Erken Hasat', 'Asit Oranı':'Düşük Asit', 'Üretim Yeri':'Edremit / Ege Bölgesi' },
+    accordions: [
+      ['Ürün Hakkında', 'AEDRIA Erken Hasat, sezonun ilk zeytinlerinden elde edilen yoğun karakterli bir natürel sızma zeytinyağıdır. Meyvemsi aroması, taze yeşil notaları ve dengeli yakıcılığıyla özellikle çiğ tüketimde öne çıkar.'],
+      ['Tadım Notları', 'Taze çimen, yeşil badem ve hafif domates yaprağı çağrışımları taşır. Damakta belirgin ama dengeli bir acılık ve boğazda zarif bir yakıcılık bırakır.'],
+      ['Kullanım Önerisi', 'Salatalar, ekşi mayalı ekmek, peynir tabakları, ızgara sebzeler ve final dokunuşu isteyen tabaklarda çiğ olarak kullanılması önerilir.'],
+      ['Hasat & Sıkım', 'Zeytinler erken dönemde toplanır ve aromatik yapısını korumak için soğuk sıkım yöntemiyle işlenir.'],
+      ['Saklama Koşulları', 'Serin, kuru ve güneş ışığından uzak bir yerde saklayın. Kapağı açıldıktan sonra şişeyi kapalı tutarak kısa sürede tüketmeniz önerilir.'],
+      ['Teslimat & İade', 'Siparişleriniz cam şişeye uygun koruyucu ambalajla özenle hazırlanır ve 1–3 iş günü içinde kargoya teslim edilir.']
+    ]
+  },
+  'daily': {
+    eyebrow: 'DENGELİ · GÜNLÜK KULLANIM',
+    desc: 'Edremit zeytinlerinden elde edilen dengeli, yumuşak içimli ve günlük kullanıma uygun soğuk sıkım natürel sızma zeytinyağı.',
+    chips: ['Soğuk Sıkım', 'Düşük Asit', 'Yüksek Polifenol'],
+    galleryBadges: [],
+    features: ['Soğuk Sıkım', 'Günlük Kullanım', 'Yüksek Polifenol', 'Düşük Asit'],
+    specs: { 'Zeytin Türü':'Edremit', 'Ürün Tipi':'Natürel Sızma Zeytinyağı', 'Sıkım Yöntemi':'Soğuk Sıkım', 'Karakter':'Dengeli ve yumuşak', 'Asit Oranı':'Düşük Asit', 'Üretim Yeri':'Edremit / Ege Bölgesi' },
+    accordions: [
+      ['Ürün Hakkında', 'AEDRIA Günlük, mutfakta her gün kullanabileceğiniz dengeli ve sade karakterli bir natürel sızma zeytinyağıdır. Hafif meyvemsi yapısıyla hem pişirme hem de soğuk kullanım için uygundur.'],
+      ['Tadım Notları', 'Yumuşak meyvemsi notalar, dengeli acılık ve hafif yakıcılık sunar. Sofrada baskın değil tamamlayıcı bir karakter yaratır.'],
+      ['Kullanım Önerisi', 'Kahvaltılar, salatalar, sebze yemekleri, makarna, mezeler ve günlük sıcak/soğuk mutfak kullanımı için idealdir.'],
+      ['Hasat & Sıkım', 'Edremit zeytinleri özenle seçilir ve zeytinin doğal aromasını koruyacak şekilde soğuk sıkım yöntemiyle işlenir.'],
+      ['Saklama Koşulları', 'Serin, kuru ve doğrudan güneş almayan bir yerde saklayın. Isı ve ışık temasını azaltmak lezzet kalitesini korur.'],
+      ['Teslimat & İade', 'Siparişleriniz cam şişeye uygun koruyucu ambalajla özenle hazırlanır ve 1–3 iş günü içinde kargoya teslim edilir.']
+    ]
+  },
+  'ozel-set': {
+    eyebrow: 'HEDİYELİK · İKİLİ PAKET',
+    desc: 'AEDRIA’nın seçili lezzetlerini bir araya getiren, sofralar ve özel hediyeler için tasarlanmış premium zeytinyağı seti.',
+    chips: ['Soğuk Sıkım', 'Düşük Asit', 'Yüksek Polifenol'],
+    galleryBadges: [],
+    features: ['İkili Seçki', 'Premium Hediye', 'Yüksek Polifenol', 'Düşük Asit'],
+    specs: { 'Set İçeriği':'Seçili AEDRIA ürünleri', 'Ürün Tipi':'Natürel Sızma Zeytinyağı Seti', 'Sıkım Yöntemi':'Soğuk Sıkım', 'Kullanım':'Sofralık ve hediyelik', 'Asit Oranı':'Düşük Asit', 'Üretim Yeri':'Edremit / Ege Bölgesi' },
+    accordions: [
+      ['Ürün Hakkında', 'AEDRIA Özel Set, markanın farklı karakterdeki zeytinyağlarını tek pakette sunar. Hem tadım deneyimi hem de rafine bir hediye alternatifi olarak tasarlanmıştır.'],
+      ['Tadım Notları', 'Set içeriğine göre yoğun, meyvemsi ve dengeli profiller birlikte sunulur. Farklı kullanım anlarına uygun zeytinyağı karakterlerini keşfetme imkânı verir.'],
+      ['Kullanım Önerisi', 'Sofra sunumları, özel davetler, hediye gönderimleri ve farklı lezzet profillerini aynı mutfakta denemek için uygundur.'],
+      ['Hasat & Sıkım', 'Sette yer alan ürünler Edremit zeytinlerinden elde edilir ve zeytinin doğal yapısını korumaya odaklanan soğuk sıkım yaklaşımıyla hazırlanır.'],
+      ['Saklama Koşulları', 'Set ürünlerini serin, kuru ve güneş ışığından uzak bir yerde saklayın. Açıldıktan sonra kapakları kapalı tutun.'],
+      ['Teslimat & İade', 'Siparişleriniz cam şişeye uygun koruyucu ambalajla özenle hazırlanır ve 1–3 iş günü içinde kargoya teslim edilir.']
+    ]
+  }
+};
+
+const icons = {
+  leaf:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21c8-1 14-7 16-18C10 5 4 11 3 19c4-2 8-5 11-9"/></svg>',
+  drop:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s7 8 7 13a7 7 0 0 1-14 0C5 10 12 2 12 2z"/></svg>',
+  press:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10"/><path d="M9 4v5a3 3 0 0 0 6 0V4"/><path d="M6 13h12"/><path d="M8 13l1 7h6l1-7"/><path d="M12 17v3"/></svg>',
+  polyphenol:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="8" r="2.5"/><circle cx="17" cy="8" r="2.5"/><circle cx="12" cy="17" r="2.5"/><path d="M9.2 9.4l2 5.2"/><path d="M14.8 9.4l-2 5.2"/><path d="M9.5 8h5"/></svg>',
+  lowAcid:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s6 7 6 12a6 6 0 0 1-12 0C6 9 12 2 12 2z"/><path d="M9 14h6"/></svg>',
+  gift:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5A2.5 2.5 0 1 1 10 4.5C10 6.5 12 7 12 7z"/><path d="M12 7h4.5A2.5 2.5 0 1 0 14 4.5C14 6.5 12 7 12 7z"/></svg>',
+  shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+  set:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h7v7H4z"/><path d="M13 10h7v7h-7z"/><path d="M7.5 4v3"/><path d="M16.5 7v3"/></svg>'
+};
+
+const BADGE_LABELS = { new: 'Yeni', hot: 'Çok Satan', discount: 'İndirim' };
+
+function getProductBadges(product) {
+  const labels = (product.badges || []).map(b => BADGE_LABELS[b]).filter(Boolean);
+  if (!product.inStock) labels.push('Tükendi');
+  return labels;
+}
+
+function getFeatureIcon(label) {
+  const key = label.toLocaleLowerCase('tr-TR');
+  if (key.includes('soğuk')) return icons.press;
+  if (key.includes('polifenol')) return icons.polyphenol;
+  if (key.includes('düşük asit')) return icons.lowAcid;
+  if (key.includes('erken')) return icons.leaf;
+  if (key.includes('günlük')) return icons.drop;
+  if (key.includes('hediye')) return icons.gift;
+  if (key.includes('ikili')) return icons.set;
+  return icons.leaf;
+}
+
+function getStickyProductLabel(product) {
+  return `${product.typeLabel} · ${product.size}`;
+}
+
+function updateStickyAddVisibility() {
+  const sticky = document.getElementById('stickyAdd');
+  const serviceList = document.querySelector('.service-list');
+  const addToCartBtn = document.getElementById('addToCartBtn');
+  if (!sticky || !serviceList || !addToCartBtn) return;
+
+  const isMobile = window.innerWidth <= 680;
+  const serviceTop = serviceList.getBoundingClientRect().top;
+  const addBtnBottom = addToCartBtn.getBoundingClientRect().bottom;
+
+  // Mobil sticky bar, ana Sepete Ekle butonu ekrandan çıktıktan ve servis listesi
+  // viewport'un üst alanına geldiğinde devreye girer.
+  if (isMobile && addBtnBottom <= 0 && serviceTop <= 96) sticky.classList.add('show');
+  else sticky.classList.remove('show');
+}
+
+
+let cart = JSON.parse(localStorage.getItem('aedria-cart') || '[]');
+let currentProduct;
+let currentGroup;
+let quantity = 1;
+let currentGalleryIndex = 0;
+
+const qs = new URLSearchParams(window.location.search);
+const initialId = qs.get('id') || 'erken-hasat-500';
+const found = CATALOG.find(p => p.id === initialId) || CATALOG[0];
+selectProduct(found.id, false);
+
+function formatPrice(price) { return price === null ? 'Yakında' : '₺' + price.toLocaleString('tr-TR'); }
+function saveCart() { localStorage.setItem('aedria-cart', JSON.stringify(cart)); }
+function getCartTotalQty() { return cart.reduce((s, i) => s + i.qty, 0); }
+function getCartTotalPrice() { return cart.reduce((s, i) => s + (i.price || 0) * i.qty, 0); }
+
+function selectProduct(productId, updateHistory = true) {
+  currentProduct = CATALOG.find(p => p.id === productId) || CATALOG[0];
+  currentGroup = GROUP_CONTENT[currentProduct.group];
+  quantity = 1;
+  currentGalleryIndex = 0;
+  if (updateHistory) history.replaceState(null, '', 'urun.html?id=' + currentProduct.id);
+  renderProduct();
+}
+
+function renderProduct() {
+  document.title = currentProduct.name + ' — AEDRIA';
+  document.getElementById('breadcrumbProduct').textContent = currentProduct.name;
+  document.getElementById('productEyebrow').textContent = currentGroup.eyebrow;
+  document.getElementById('productTitle').textContent = currentProduct.name;
+  document.getElementById('productDesc').textContent = currentGroup.desc;
+  document.getElementById('productPrice').textContent = formatPrice(currentProduct.price);
+  document.getElementById('qtyValue').textContent = quantity;
+  document.getElementById('stickyName').textContent = getStickyProductLabel(currentProduct);
+  document.getElementById('stickyPrice').textContent = formatPrice(currentProduct.price);
+
+  const stockMsg = document.getElementById('stockMsg');
+  const canBuy = currentProduct.inStock && currentProduct.price !== null;
+  stockMsg.hidden = currentProduct.inStock;
+  document.getElementById('addToCartBtn').disabled = !canBuy;
+  document.getElementById('stickyAddBtn').disabled = !canBuy;
+  document.getElementById('priceNote').textContent = currentProduct.price === null ? 'Fiyat bilgisi yakında' : 'KDV dahil';
+
+  document.getElementById('productChips').innerHTML = currentGroup.chips.slice(0, 3).map(c => `<span class="chip">${c}</span>`).join('');
+  document.getElementById('galleryBadges').innerHTML = getProductBadges(currentProduct).map(b => `<span class="gallery-badge">${b}</span>`).join('');
+
+  const variants = CATALOG.filter(p => p.group === currentProduct.group);
+  const variantBlock = document.getElementById('variantBlock');
+  variantBlock.style.display = variants.length > 1 ? '' : 'none';
+  document.getElementById('variantPills').innerHTML = variants.map(v => `
+    <button class="variant-pill${v.id === currentProduct.id ? ' active' : ''}${!v.inStock ? ' out' : ''}" data-id="${v.id}">${v.size}</button>
+  `).join('');
+  document.querySelectorAll('.variant-pill').forEach(btn => btn.addEventListener('click', () => selectProduct(btn.dataset.id)));
+
+  renderGallery();
+  renderAccordion();
+  renderSpecs();
+  renderRelated();
+  updateBadge();
+  updateStickyAddVisibility();
+}
+
+function renderGallery() {
+  const gallery = [currentProduct.image];
+  const main = document.getElementById('mainProductImage');
+  main.src = gallery[currentGalleryIndex];
+  main.alt = `${currentProduct.name} ${currentProduct.size}`;
+  document.getElementById('thumbs').innerHTML = gallery.map((src, i) => `
+    <button class="thumb${i === currentGalleryIndex ? ' active' : ''}" data-index="${i}" aria-label="Görsel ${i+1}"><img src="${src}" alt="${currentProduct.name}"></button>
+  `).join('');
+  document.getElementById('galleryDots').innerHTML = gallery.map((_, i) => `<button class="gallery-dot${i === currentGalleryIndex ? ' active' : ''}" data-index="${i}" aria-label="Görsel ${i+1}"></button>`).join('');
+  document.querySelectorAll('.thumb, .gallery-dot').forEach(btn => btn.addEventListener('click', () => {
+    currentGalleryIndex = Number(btn.dataset.index) || 0;
+    renderGallery();
+  }));
+}
+
+function renderAccordion() {
+  document.getElementById('accordion').innerHTML = currentGroup.accordions.map((item, i) => `
+    <div class="accordion-item${i === 0 ? ' open' : ''}">
+      <button class="accordion-trigger" aria-expanded="${i === 0 ? 'true' : 'false'}">
+        <span>${item[0]}</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+      <div class="accordion-panel">${item[1]}</div>
+    </div>
+  `).join('');
+  document.querySelectorAll('.accordion-trigger').forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      const item = trigger.closest('.accordion-item');
+      item.classList.toggle('open');
+      trigger.setAttribute('aria-expanded', item.classList.contains('open') ? 'true' : 'false');
+    });
+  });
+}
+
+function renderSpecs() {
+  document.getElementById('featureIcons').innerHTML = currentGroup.features.map(f => `
+    <div class="feature-icon">${getFeatureIcon(f)}<span>${f}</span></div>
+  `).join('');
+  const specs = { ...currentGroup.specs, 'Hacim': currentProduct.volume };
+  document.getElementById('specTable').innerHTML = Object.entries(specs).map(([k,v]) => `
+    <div class="spec-row"><dt>${k}</dt><dd>${v}</dd></div>
+  `).join('');
+}
+
+function renderRelated() {
+  const representatives = [];
+  ['erken-hasat','daily','ozel-set'].forEach(group => {
+    const item = CATALOG.find(p => p.group === group && p.id !== currentProduct.id && p.inStock) || CATALOG.find(p => p.group === group && p.id !== currentProduct.id);
+    if (item && !representatives.find(r => r.id === item.id)) representatives.push(item);
+  });
+  const related = representatives.filter(p => p.id !== currentProduct.id).slice(0,3);
+  document.getElementById('relatedGrid').innerHTML = related.map(cardHTML).join('');
+  document.querySelectorAll('.mini-add').forEach(btn => btn.addEventListener('click', e => {
+    e.preventDefault(); e.stopPropagation();
+    const p = CATALOG.find(item => item.id === btn.dataset.id);
+    if (p && p.price !== null && p.inStock) addProductToCart(p, 1, true);
+  }));
+}
+
+function cardHTML(p) {
+  return `
+    <a class="product-card" href="urun.html?id=${p.id}">
+      <div class="card-img-wrap"><img src="${p.image}" alt="${p.name} ${p.size}" loading="lazy"></div>
+      <div class="card-info">
+        <div class="card-type">${p.typeLabel}</div>
+        <div class="card-name">${p.name}</div>
+        <div class="card-size">${p.size}</div>
+        <div class="card-footer">
+          <div class="card-price">${formatPrice(p.price)}</div>
+          ${p.price !== null && p.inStock ? `<button class="mini-add" data-id="${p.id}">Sepete Ekle</button>` : `<span class="card-price-soon">Yakında</span>`}
+        </div>
+      </div>
+    </a>`;
+}
+
+function addProductToCart(product, qty = quantity, open = true) {
+  if (!product.inStock || product.price === null) return;
+  const existing = cart.find(i => i.id === product.id);
+  if (existing) existing.qty += qty;
+  else cart.push({ id: product.id, name: product.name, size: product.size, price: product.price, image: product.image, qty });
+  saveCart(); updateBadge(); renderDrawer();
+  if (open) openCartDrawer();
+}
+
+function updateBadge() {
+  const badge = document.getElementById('cartBadge');
+  const total = getCartTotalQty();
+  if (total > 0) { badge.textContent = total; badge.removeAttribute('hidden'); }
+  else { badge.setAttribute('hidden', ''); }
+}
+
+function openCartDrawer() {
+  renderDrawer();
+  document.getElementById('cartDrawer').classList.add('open');
+  document.getElementById('cartOverlay').classList.add('open');
+  document.getElementById('cartDrawer').setAttribute('aria-hidden', 'false');
+}
+function closeCartDrawer() {
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.getElementById('cartOverlay').classList.remove('open');
+  document.getElementById('cartDrawer').setAttribute('aria-hidden', 'true');
+}
+
+function renderDrawer() {
+  const body = document.getElementById('cartDrawerBody');
+  const footer = document.getElementById('cartDrawerFooter');
+  if (!cart.length) {
+    body.innerHTML = `<div class="cart-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><h3>Sepetiniz boş</h3><p>Henüz ürün eklemediniz.</p><a href="urunler.html" class="btn">Alışverişe Başla</a></div>`;
+    footer.innerHTML = '';
+    return;
+  }
+  const trash = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`;
+  const minus = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>`;
+  const plus = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`;
+  body.innerHTML = `<div class="cart-item-list">${cart.map(item => `
+    <div class="cart-item" data-id="${item.id}">
+      <div class="cart-item-img"><img src="${item.image}" alt="${item.name}"></div>
+      <div class="cart-item-body">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-size">${item.size}</div>
+        <div class="cart-item-price-row">
+          <div class="cart-item-total">${formatPrice((item.price || 0) * item.qty)}</div>
+          <div class="cart-item-controls">
+            <button class="d-qty-btn" data-id="${item.id}" data-action="dec">${item.qty === 1 ? trash : minus}</button>
+            <span class="d-qty-display">${item.qty}</span>
+            <button class="d-qty-btn" data-id="${item.id}" data-action="inc">${plus}</button>
+          </div>
+        </div>
+      </div>
+      <button class="cart-item-remove" data-id="${item.id}" aria-label="Ürünü kaldır">${trash}</button>
+    </div>`).join('')}</div>`;
+  footer.innerHTML = `<div class="cart-total-row"><span class="cart-total-label">Toplam</span><span class="cart-total-amount">${formatPrice(getCartTotalPrice())}</span></div><div class="drawer-actions"><a href="cart.html" class="btn">Sepete Git</a><button class="btn btn-secondary" id="continueShopping">Alışverişe Devam Et</button></div>`;
+
+  body.querySelectorAll('.d-qty-btn').forEach(btn => btn.addEventListener('click', () => changeCartQty(btn.dataset.id, btn.dataset.action === 'inc' ? 1 : -1)));
+  body.querySelectorAll('.cart-item-remove').forEach(btn => btn.addEventListener('click', () => removeFromCart(btn.dataset.id)));
+  const cont = document.getElementById('continueShopping');
+  if (cont) cont.addEventListener('click', closeCartDrawer);
+}
+
+function changeCartQty(id, delta) {
+  const idx = cart.findIndex(i => i.id === id);
+  if (idx === -1) return;
+  cart[idx].qty += delta;
+  if (cart[idx].qty <= 0) cart.splice(idx, 1);
+  saveCart(); updateBadge(); renderDrawer();
+}
+function removeFromCart(id) {
+  cart = cart.filter(i => i.id !== id);
+  saveCart(); updateBadge(); renderDrawer();
+}
+
+/* Events */
+document.getElementById('qtyMinus').addEventListener('click', () => { quantity = Math.max(1, quantity - 1); document.getElementById('qtyValue').textContent = quantity; });
+document.getElementById('qtyPlus').addEventListener('click', () => { quantity += 1; document.getElementById('qtyValue').textContent = quantity; });
+document.getElementById('addToCartBtn').addEventListener('click', () => addProductToCart(currentProduct, quantity, true));
+document.getElementById('stickyAddBtn').addEventListener('click', () => addProductToCart(currentProduct, quantity, true));
+document.getElementById('cartBtn').addEventListener('click', openCartDrawer);
+document.getElementById('cartClose').addEventListener('click', closeCartDrawer);
+document.getElementById('cartOverlay').addEventListener('click', closeCartDrawer);
+
+const menuToggle = document.getElementById('menuToggle');
+const menuClose = document.getElementById('menuClose');
+const mobileMenu = document.getElementById('mobileMenu');
+const menuOverlay = document.getElementById('menuOverlay');
+menuToggle.addEventListener('click', () => { mobileMenu.classList.add('open'); menuOverlay.classList.add('open'); });
+menuClose.addEventListener('click', () => { mobileMenu.classList.remove('open'); menuOverlay.classList.remove('open'); });
+menuOverlay.addEventListener('click', () => { mobileMenu.classList.remove('open'); menuOverlay.classList.remove('open'); });
+mobileMenu.querySelectorAll('a').forEach(l => l.addEventListener('click', () => { mobileMenu.classList.remove('open'); menuOverlay.classList.remove('open'); }));
+
+document.getElementById('newsletterForm').addEventListener('submit', e => {
+  e.preventDefault();
+  document.getElementById('newsletterSuccess').classList.add('show');
+  document.getElementById('newsletterForm').reset();
+});
+
+window.addEventListener('scroll', updateStickyAddVisibility, { passive: true });
+window.addEventListener('resize', updateStickyAddVisibility);
+
+renderDrawer();
+updateBadge();
+updateStickyAddVisibility();
+</script>
+</body>
+</html>
