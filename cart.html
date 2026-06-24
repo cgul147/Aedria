@@ -82,26 +82,39 @@
   /* Dolu sepet */
   .cart-items { display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; }
   .cart-item {
-    display: flex; align-items: center; justify-content: space-between; gap: 16px;
-    padding: 20px 24px; background: var(--cream); border-radius: var(--r-md);
+    display: flex; align-items: flex-start; gap: 16px;
+    padding: 18px 20px; background: var(--cream); border-radius: var(--r-md);
     border: 1px solid var(--line);
   }
-  .cart-item-info { flex: 1; }
-  .cart-item-info h3 { font-size: 18px; margin-bottom: 4px; }
-  .cart-item-info span { font-size: 14px; color: rgba(53,61,31,0.6); }
-  .cart-item-controls { display: flex; align-items: center; gap: 12px; }
+  .cart-item-img {
+    width: 72px; height: 72px; border-radius: 12px;
+    overflow: hidden; flex-shrink: 0;
+    background: var(--white); border: 1px solid var(--line);
+  }
+  .cart-item-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .cart-item-info { flex: 1; min-width: 0; }
+  .cart-item-info h3 { font-size: 16px; margin-bottom: 3px; line-height: 1.35; }
+  .cart-item-size-label { font-size: 13px; color: rgba(53,61,31,0.5); margin-bottom: 4px; display: block; }
+  .cart-item-info .unit-price { font-size: 13px; color: rgba(53,61,31,0.6); }
+  .cart-item-controls { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
   .qty-btn {
-    width: 32px; height: 32px; border-radius: var(--r-pill);
+    width: 30px; height: 30px; border-radius: var(--r-pill);
     border: 1.5px solid var(--line); background: var(--white);
-    cursor: pointer; font-size: 18px; line-height: 1;
-    display: flex; align-items: center; justify-content: center;
-    transition: border-color .2s, background .2s;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: border-color .2s, background .2s; color: var(--olive-dark);
+    flex-shrink: 0;
   }
   .qty-btn:hover { border-color: var(--olive); background: var(--cream); }
-  .qty-display { font-size: 16px; font-weight: 500; min-width: 24px; text-align: center; }
-  .item-total { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 500; min-width: 80px; text-align: right; }
-  .remove-btn { background: none; border: none; cursor: pointer; color: rgba(53,61,31,0.4); padding: 4px; transition: color .2s; }
+  .qty-btn svg { width: 14px; height: 14px; }
+  .qty-display { font-size: 15px; font-weight: 600; min-width: 22px; text-align: center; }
+  .cart-item-right { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; gap: 12px; flex-shrink: 0; }
+  .item-total { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 500; }
+  .remove-btn {
+    background: none; border: none; cursor: pointer;
+    color: rgba(53,61,31,0.35); padding: 4px; transition: color .2s;
+  }
   .remove-btn:hover { color: var(--earth); }
+  .remove-btn svg { width: 16px; height: 16px; display: block; }
 
   .cart-summary {
     border-top: 1.5px solid var(--line); padding-top: 28px;
@@ -143,7 +156,7 @@
   <a href="index.html" class="logo">AEDRIA</a>
   <nav>
     <a href="index.html#hikayemiz">Hikayemiz</a>
-    <a href="index.html#urunler">Ürünler</a>
+    <a href="urunler.html">Ürünlerimiz</a>
     <a href="index.html#iletisim">İletişim</a>
   </nav>
   <a href="cart.html" class="cart-btn" id="cartBtn" aria-label="Sepet">
@@ -159,7 +172,7 @@
   </button>
   <a href="index.html#ana-sayfa">Ana Sayfa</a>
   <a href="index.html#hikayemiz">Hikayemiz</a>
-  <a href="index.html#urunler">Ürünler</a>
+  <a href="urunler.html">Ürünlerimiz</a>
   <a href="index.html#iletisim">İletişim</a>
 </nav>
 
@@ -190,7 +203,7 @@
     else { badge.setAttribute('hidden', ''); }
   }
 
-  function calcTotal() { return cart.reduce((s, i) => s + i.price * i.qty, 0); }
+  function calcTotal() { return cart.reduce((s, i) => s + (i.price || 0) * i.qty, 0); }
 
   function render() {
     const el = document.getElementById('cartContent');
@@ -200,32 +213,46 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
           <h2>Sepetiniz boş</h2>
           <p>Henüz hiçbir ürün eklemediniz.</p>
-          <a href="index.html#urunler" class="btn">Alışverişe Başla</a>
+          <a href="urunler.html" class="btn">Alışverişe Başla</a>
         </div>`;
       return;
     }
 
-    const itemsHtml = cart.map((item, idx) => `
+    const trashIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`;
+    const minusIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>`;
+    const plusIcon  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`;
+
+    const itemsHtml = cart.map((item, idx) => {
+      const decIcon = item.qty === 1 ? trashIcon : minusIcon;
+      const sizeLabel = item.size ? `<span class="cart-item-size-label">${item.size}</span>` : '';
+      const unitPrice = item.price ? `<span class="unit-price">₺${item.price.toLocaleString('tr-TR')} / adet</span>` : `<span class="unit-price">Fiyat yakında</span>`;
+      const rowTotal = item.price ? '₺' + (item.price * item.qty).toLocaleString('tr-TR') : '—';
+      return `
       <div class="cart-item">
+        <div class="cart-item-img">
+          <img src="${item.image || 'aedria-erken-hasat.png'}" alt="${item.name}">
+        </div>
         <div class="cart-item-info">
           <h3>${item.name}</h3>
-          <span>${item.price} TL / adet</span>
+          ${sizeLabel}
+          ${unitPrice}
+          <div class="cart-item-controls">
+            <button class="qty-btn" data-idx="${idx}" data-action="dec">${decIcon}</button>
+            <span class="qty-display">${item.qty}</span>
+            <button class="qty-btn" data-idx="${idx}" data-action="inc">${plusIcon}</button>
+          </div>
         </div>
-        <div class="cart-item-controls">
-          <button class="qty-btn" data-idx="${idx}" data-action="dec">−</button>
-          <span class="qty-display">${item.qty}</span>
-          <button class="qty-btn" data-idx="${idx}" data-action="inc">+</button>
+        <div class="cart-item-right">
+          <div class="item-total">${rowTotal}</div>
+          <button class="remove-btn" data-idx="${idx}" aria-label="${item.name} kaldır">${trashIcon}</button>
         </div>
-        <div class="item-total">${item.price * item.qty} TL</div>
-        <button class="remove-btn" data-idx="${idx}" aria-label="${item.name} kaldır">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>`).join('');
+      </div>`;
+    }).join('');
 
     el.innerHTML = `
       <div class="cart-items">${itemsHtml}</div>
       <div class="cart-summary">
-        <div class="cart-total"><span>Toplam</span>${calcTotal()} TL</div>
+        <div class="cart-total"><span>Toplam</span>₺${calcTotal().toLocaleString('tr-TR')}</div>
         <a href="#" class="btn">Ödemeye Geç</a>
       </div>`;
 
